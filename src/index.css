@@ -12,12 +12,28 @@ code {
     monospace;
 }
 .footer{
-  position: relative;
+  /* position: relative;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0; */
+  /* width:100%;
+    background-color: gray;   
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content:space-between; */
 }
 .bannerimage{
   height: 430px;
   width: 1280px;
+}
+html{
+  height:100%;
+}
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100%;
 }

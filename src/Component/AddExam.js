@@ -1,43 +1,112 @@
-import React, { useState } from "react";
-import { Link, Outlet } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 import useStateRef from "react-usestateref";
+import {  useNavigate  } from 'react-router-dom';
+
 
 function AddExam() {
-  const [hasError, setHasError, refHasError] = useStateRef(false);
 
+  const [hasError, setHasError,refHasError] = useStateRef(false);
+
+  const [examName, setExamName] = useState('');
+  const [description, setDescription] = useState('');
+  const [creationdate, setCreationDate] = useState('');
+  const [expirationdate, setExpirationDate] = useState('');
+  const [noOfQuestions, setNoOfquestions] = useState('');
+  const [durationMinutes, setDurationMinutes] = useState('');
+  const [passPercentage, setPassPercentage] = useState('');
+  const [questionsRandomized, setQuestionsRandomized] = useState('');
+  const [answerMust, setAnswerMust] = useState('')
+  const [enableNegativeMark, setEnableNegativeMark] = useState('');
+  const [negativeMarkValue, setNegativeMarkValue] = useState('');
+
+  var url = window.location.href.includes('?');
+  var queryParam = window.location.search;
+
+  const queryParamKeypairs = new URLSearchParams(queryParam);
+
+  var examId = queryParamKeypairs.get('examId');
+
+  useEffect(() => {
+    console.log(url);
+    if (url) {
+
+      console.log(examId);
+      const examFetch = async () => {
+        const examFetchFunc = await fetch('https://localhost:8443/onlineexamapplication/control/get-exam-and-exam-list', {
+          method: 'POST',
+          credentials: 'include',
+          body: JSON.stringify({ examId: examId }),
+          headers: {
+            'Content-Type': "application/json",
+            'Accept': "application/json"
+          }
+        })
+        const examFetchResultJson = await examFetchFunc.json();
+        const examFetchResult = examFetchResultJson.Getexam;
+        console.log(examFetchResult);
+        setExamName(examFetchResult.examName);
+        setDescription(examFetchResult.description)
+        setCreationDate(examFetchResult.creationDate)
+        setExpirationDate(examFetchResult.expirationDate)
+        setNoOfquestions(examFetchResult.noOfQuestions)
+        setDurationMinutes(examFetchResult.durationMinutes)
+        setEnableNegativeMark(examFetchResult.enableNegativeMark)
+        setPassPercentage(examFetchResult.passPercentage)
+        setNegativeMarkValue(examFetchResult.negativeMarkValue)
+        setQuestionsRandomized(examFetchResult.questionsRandomized)
+        setAnswerMust(examFetchResult.answersMust)
+        
+
+      }
+      examFetch();
+
+    }
+    
+  }, []);
+ 
 
 
   function validation(key, value) {
-    
-    setHasError(false);
     var result = value;
+   
     switch (key) {
+     
       case "examName":
-        document.getElementById(key + "_error").classList.remove("d-block");
-        document.getElementById(key + "_error").classList.add("d-none");
-        document.getElementById(key + "_error").innerHTML = "";
-
-        if (!result) {
+        console.log(result);
+        if(!result){
           document.getElementById(key + "_error").classList.remove("d-none");
           document.getElementById(key + "_error").classList.add("d-block");
           document.getElementById(key + "_error").innerHTML =
             "*please enter the examName";
+            setHasError(true);
+        }else{
+        if (result.match(/^[a-zA-z0-9]+$/g)){
+          document.getElementById(key + "_error").classList.remove("d-block");
+          document.getElementById(key + "_error").classList.add("d-none");
+          document.getElementById(key + "_error").innerHTML = "";
+          
+        }else{
+            document.getElementById(key + "_error").classList.remove("d-none");
+          document.getElementById(key + "_error").classList.add("d-block");
+          document.getElementById(key + "_error").innerHTML =
+          "*special characters not alloewd";
           setHasError(true);
         }
+      }
         break;
-
-     
       case "description":
         document.getElementById(key + "_error").classList.remove("d-block");
         document.getElementById(key + "_error").classList.add("d-none");
         document.getElementById(key + "_error").innerHTML = "";
         if (!result) {
+          setHasError(true);
           document.getElementById(key + "_error").classList.remove("d-none");
           document.getElementById(key + "_error").classList.add("d-block");
           document.getElementById(key + "_error").innerHTML =
             "*please enter the description";
-          setHasError(true);
+          
         }
         break;
       case "creationDate":
@@ -45,11 +114,12 @@ function AddExam() {
         document.getElementById(key + "_error").classList.add("d-none");
         document.getElementById(key + "_error").innerHTML = "";
         if (!result) {
+          setHasError(true);
           document.getElementById(key + "_error").classList.remove("d-none");
           document.getElementById(key + "_error").classList.add("d-block");
           document.getElementById(key + "_error").innerHTML =
             "*please enter the creationdate";
-          setHasError(true);
+          
         }
         break;
       case "expirationDate":
@@ -124,7 +194,7 @@ function AddExam() {
           setHasError(true);
         }
         break;
-      case "enableNegativeMarks":
+      case "enableNegativeMark":
         document.getElementById(key + "_error").classList.remove("d-block");
         document.getElementById(key + "_error").classList.add("d-none");
         document.getElementById(key + "_error").innerHTML = "";
@@ -137,7 +207,7 @@ function AddExam() {
         }
         break;
 
-      case "negativeMarkValues":
+      case "negativeMarkValue":
         document.getElementById(key + "_error").classList.remove("d-block");
         document.getElementById(key + "_error").classList.add("d-none");
         document.getElementById(key + "_error").innerHTML = "";
@@ -151,50 +221,121 @@ function AddExam() {
         break;
     }
   }
-// validation end
+  // validation end
 
-
-//onclick event......
+  const navigate =useNavigate();
+  //onclick event......
   const examFormValidate = (e) => {
     e.preventDefault();
+setHasError(false)
 
     console.log("validate event called");
     const data = new FormData(e.target);
     const dataObject = Object.fromEntries(data.entries());
     console.log(dataObject)
+    console.log(creationdate)
+    console.log(expirationdate)
     Object.entries(dataObject).map(([key, value]) => {
-       validation(key, value);
-    });
-    if (!refHasError.current) {
-     
+      validation(key, value);
 
-      fetch("https://localhost:8443/onlineexamapplication/control/addExam", {
+    });
+
+    console.log(hasError+"...haserror")
+    console.log(refHasError+"..ref")
+    console.log(refHasError.current+"..........current")
+
+    if(!refHasError.current){
+    if (url) {
+      console.log("thi is...............................")
+      dataObject.examId = examId;
+      console.log(dataObject)
+      fetch("https://localhost:8443/onlineexamapplication/control/update-exam", {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(dataObject),
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
+          "Accept": "application/json"
         },
-      }).then(response=>response.json())
-      .then(value=>{console.log(value)});
-    }
+      }).then(response => response.json())
+        .then(value => { 
+          if(value.result=="success"){
+            Swal.fire({
+              position: "top-center",
+              icon: "success",
+              title: "Exam Updated SuccessFully",
+              showConfirmButton: false,
+              timer: 1500
+            });
+           
+            
+          }else{
+            Swal.fire({
+              position: "top-center",
+              icon: value.result,
+              title: value.errMsg,
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+         });
+         navigate('/view-exam')   
+         window.location.reload()
 
+    }
+    else {
+      fetch("https://localhost:8443/onlineexamapplication/control/add-exam", {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(dataObject),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+      }).then(response => response.json())
+        .then(value => { 
+          console.log(value)
+          if(value.result=="success"){
+            Swal.fire({
+              position: "top-center",
+              icon: "success",
+              title: "Exam Added SuccessFully",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            setTimeout(function(){
+              window.location.reload();
+            },2000)
+          }else if(value.result=="error"){
+            Swal.fire({
+              position: "top-center",
+              icon: "Error",
+              title: value.errMsg,
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+         });
+    }
+  }
+
+    
   };
 
-
+  //onclick event end.......
+  const value = "addExam";
   return (
     <>
-      
-      <div className="container-fluid pb-5 ">
+     
+      <div className="container pb-5">
         <div className="row">
-          <div className="col-sm-7  offset-md-3 mt-5">
-            <div className="card mt-5 card border-dark mb-3">
+          <div className="col-sm-7 offset-md-3 mt-5">
+            <div className="card custom-bd-color">
               <div className="card-header text-center">
-                <h2>Add Exam</h2>
+                {url == false ? <h2>Add Exam</h2> : <h2>Update Exam</h2>}
               </div>
               <div className="card-body">
-                <form onSubmit={examFormValidate}>
+                <form method="POST" onSubmit={examFormValidate}>
                   <div className="form-group">
                     <label for="examname">Exam Name</label>
                     <input
@@ -203,14 +344,16 @@ function AddExam() {
                       id="examName"
                       placeholder="Exam Name"
                       name="examName"
+                      value={examName}
+                      onChange={(e) => { setExamName(e.target.value) }}
                     ></input>
                     <p id="examName_error" className="d-none text-danger"></p>
                   </div>
 
-                  
+                 
 
-                  <div className="row">
-                    <div className="col-sm-6">
+                
+                    <div className="">
                       <div className="form-group">
                         <label for="description">Description</label>
                         <textarea
@@ -219,71 +362,87 @@ function AddExam() {
                           id="description"
                           placeholder="Write ur description"
                           name="description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
                         <p
                           id="description_error"
                           className="d-none text-danger"
                         ></p>
                       </div>
-
-                      <div className="form-group">
-                        <div className="col-sm-6  ">
-                          <label for="duration">Duration</label>
-                          <input
-                            type="text"
-                            id="duration"
-                            className="form-control"
-                            placeholder="minutes"
-                            name="durationMinutes"
-                          ></input>
-                          <p
-                            id="durationMinutes_error"
-                            className="d-none text-danger"
-                          ></p>
-                        </div>
-                      </div>
                     </div>
 
-                    <div className="col-sm-5 offset-md-1">
-                      <div className="form-group">
-                        <label for="creationdate">Creation Date</label>
-                        <input
-                          type="datetime-local"
-                          className="form-control"
-                          id="creationdate"
-                          name="creationDate"
-                        ></input>
-                        <p
-                          id="creationDate_error"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
 
-                      <div className="form-group">
-                        <label for="expirationdate">Expiration Date</label>
+                    <div className="form-group">
+                      <div className=" ">
+                        <label for="duration">Duration</label>
                         <input
-                          type="datetime-local"
+                          type="text"
+                          id="duration"
                           className="form-control"
-                          id="expirationdate"
-                          name="expirationDate"
+                          placeholder="minutes"
+                          name="durationMinutes"
+                          min='0'
+                          value={durationMinutes}
+                          onChange={(e) => setDurationMinutes(e.target.value)}
                         ></input>
                         <p
-                          id="expirationDate_error"
+                          id="durationMinutes_error"
                           className="d-none text-danger"
                         ></p>
                       </div>
+                    </div>
+                  
+                 <div className="row">
+                  <div className="col-sm-6 ">
+                    <div className="form-group">
+                      <label for="creationdate">Creation Date</label>
+                      <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="creationdate"
+                        name="creationDate"
+                        value={creationdate}
+                        onChange={(e) => setCreationDate(e.target.value)}
+                      ></input>
+                      <p
+                        id="creationDate_error"
+                        className="d-none text-danger"
+                      ></p>
+                    </div>
+                    </div>
+
+                    <div className="col-sm-5   offset-md-1">
+                    <div className="form-group">
+                      <label for="expirationdate">Expiration Date</label>
+                      <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="expirationdate"
+                        name="expirationDate"
+                        value={expirationdate}
+                        onChange={(e) => { setExpirationDate(e.target.value) }}
+                      ></input>
+                      <p
+                        id="expirationDate_error"
+                        className="d-none text-danger"
+                      ></p>
+                    </div>
                     </div>
                   </div>
 
                   <div className="row">
-                    <div className="col-sm-4 offset-md-0">
+                    <div className="col-sm-6 offset-md-0">
                       <div className="form-group">
-                        <lable for="noof.qa">No of Question</lable>
+                        <lable >No of Question</lable>
                         <input
                           type="number"
                           className="form-control"
                           id="noof.qa"
                           name="noOfQuestions"
+                          min='0'
+                          value={noOfQuestions}
+                          onChange={(e) => setNoOfquestions(e.target.value)}
                         ></input>
                         <p
                           id="noOfQuestions_error"
@@ -292,13 +451,16 @@ function AddExam() {
                       </div>
                     </div>
 
-                    <div className="col-sm-4 offset-md-3">
+                    <div className="col-sm-5 offset-md-1">
                       <label for="passpercentage">PassPercentage</label>
                       <input
                         type="number"
                         id="passpercentage"
                         className="form-control"
                         name="passPercentage"
+                        min='0'
+                        value={passPercentage}
+                        onChange={(e) => setPassPercentage(e.target.value)}
                       ></input>
                       <p
                         id="passPercentage_error"
@@ -319,6 +481,8 @@ function AddExam() {
                           className="form-control"
                           placeholder="Question Randomized"
                           name="questionsRandomized"
+                          value={questionsRandomized}
+                          onChange={(e) => setQuestionsRandomized(e.target.value)}
                         ></input>
                         <p
                           id="questionsRandomized_error"
@@ -336,6 +500,8 @@ function AddExam() {
                           className="form-control"
                           placeholder="Answer Must"
                           name="answersMust"
+                          value={answerMust}
+                          onChange={(e) => setAnswerMust(e.target.value)}
                         ></input>
                         <p
                           id="answersMust_error"
@@ -355,10 +521,13 @@ function AddExam() {
                           type="text"
                           className="form-control"
                           id="EnableNegativeMarks"
-                          name="enableNegativeMarks"
+                          name="enableNegativeMark"
+                          placeholder="enableNegativeMark"
+                          value={enableNegativeMark}
+                          onChange={(e) => setEnableNegativeMark(e.target.value)}
                         ></input>
                         <p
-                          id="enableNegativeMarks_error"
+                          id="enableNegativeMark_error"
                           className="d-none text-danger"
                         ></p>
                       </div>
@@ -373,10 +542,14 @@ function AddExam() {
                           type="number"
                           className="form-control"
                           id="nagativemarksvalues"
-                          name="negativeMarkValues"
+                          name="negativeMarkValue"
+                          placeholder="negativeMarkValue"
+                          min='0'
+                          value={negativeMarkValue}
+                          onChange={(e) => setNegativeMarkValue(e.target.value)}
                         ></input>
                         <p
-                          id="negativeMarkValues_error"
+                          id="negativeMarkValue_error"
                           className="d-none text-danger"
                         ></p>
                       </div>
@@ -384,17 +557,15 @@ function AddExam() {
                   </div>
 
                   <div className="text-center mt-2">
-                    <button type='submit'className="btn btn-success">Submit</button>
-                  <Link to='/add-topic'>  <button className="btn btn-primary offset-md-1">Add Topic</button></Link>
-                  <Link to='#'><button className="btn btn-warning offset-md-1">View Exam</button></Link>
+                    <button className="btn btn-success">{url == false ? <text>Add Exam</text> : <text>Update Exam</text>}</button>
                   </div>
                 </form>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-  
+        </div >
+      </div >
+
     </>
   );
 }

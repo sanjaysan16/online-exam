@@ -35,4 +35,23 @@
   to {
     transform: rotate(360deg);
   }
+
+}
+.custom-card-header{
+  background-color:rgb(125, 125, 123);
+}
+.questioncardheader{
+  background-color:  rgb(129, 133, 137);
+}
+.nav-color{
+  background-color:  rgb(129, 133, 137);
+}
+.questiontype{
+  padding-left:0px;
+  border: 2px solid rgb(108, 124, 143);
+  border-radius: 5px;
+  padding: 14px;
+}
+.custom-bd-color{
+  border: 2px solid rgb(108, 124, 143);
 }
