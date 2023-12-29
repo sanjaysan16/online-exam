@@ -35,7 +35,7 @@ public class ViewQuestionsEvent {
 			
 
 			try {
-				questionList = EntityQuery.use(delegator).from(OnlineExam.QuestionMaster).where(OnlineExam.TOPIC_ID,topicId).cache().queryList();
+				questionList = EntityQuery.use(delegator).from(OnlineExam.Question_Master).where(OnlineExam.TOPIC_ID,topicId).cache().queryList();
 			} catch (GenericEntityException e) {
 				String err = "unable to connect QuestionMaster entity" + e.toString();
 				request.setAttribute("error", err);
