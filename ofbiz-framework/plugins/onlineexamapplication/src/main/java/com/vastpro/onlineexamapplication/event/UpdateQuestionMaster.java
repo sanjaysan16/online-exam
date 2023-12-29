@@ -30,7 +30,7 @@ public class UpdateQuestionMaster {
 		
 		String result="";
 		
-		Long questionId = Long.parseLong((String) request.getParameter(OnlineExam.QUESTION_ID));
+		Long questionId = Long.parseLong(request.getParameter(OnlineExam.QUESTION_ID));
 		
 		
 		if(UtilValidate.isNotEmpty(questionId)||questionNullCheck!=null) {

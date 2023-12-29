@@ -30,8 +30,8 @@ public class UpdateExam {
 		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		 
-		String examId=(String) request.getAttribute(OnlineExam.EXAMID);
-		String examName = (String) request.getAttribute(OnlineExam.EXAMNAME);
+		String examId=(String) request.getAttribute(OnlineExam.EXAM_ID);
+		String examName = (String) request.getAttribute(OnlineExam.EXAM_NAME);
 
 		if (UtilValidate.isEmpty(examName)||UtilValidate.isEmpty(examId)) {
 			String errMsg = "examId examName is required fields";
