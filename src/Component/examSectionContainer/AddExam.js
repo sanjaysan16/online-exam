@@ -32,14 +32,11 @@ const AddExam=() =>{
     console.log(url);
     if (url) {
 
-      console.log(examId);
-     
       examFetch();
 
     }
     
   }, []);
-
 
 
   const examFetch = async () => {
@@ -249,31 +246,29 @@ setHasError(false)
     console.log(refHasError.current+"..........current")
 
     if(!refHasError.current){
-    if (url) {
-      console.log("thi is...............................")
-       dataObject.examId = examId;
-      console.log("dataObject---dataObject",dataObject)
-      fetch("https://localhost:8443/onlineexamapplication/control/update-exam", {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(dataObject),
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        
-      }).then(response => response.json())
-        .then(value => { 
-          if(value.result=="success"){
+     const updateExamFunction=async()=>{
+      if (url) {
+        console.log("thi is...............................")
+         dataObject.examId = examId;
+        console.log("dataObject---dataObject",dataObject)
+          const updateExamFetch=await  fetch("https://localhost:8443/onlineexamapplication/control/update-exam", {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify(dataObject),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+     });
+           const updateExamFetchResult=await updateExamFetch.json();
+           if(updateExamFetchResult.result=="success"){
             Swal.fire({
               position: "top-center",
               icon: "success",
               title: "Exam Updated SuccessFully",
               showConfirmButton: false,
               timer: 1500
-            });
-           
-            
+            })
           }else{
             Swal.fire({
               position: "top-center",
@@ -281,16 +276,13 @@ setHasError(false)
               title: value.errMsg,
               showConfirmButton: false,
               timer: 1500
-            });
-          }
-         })
-         
-         navigate('/view-exam')   
-         window.location.reload()
-
-    }
+            })
+            navigate('/view-exam')   
+            window.location.reload()
+         }
+    }      
     else {
-      fetch("https://localhost:8443/onlineexamapplication/control/add-exam", {
+      const createExamFetch=await  fetch("https://localhost:8443/onlineexamapplication/control/add-exam", {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(dataObject),
@@ -298,10 +290,9 @@ setHasError(false)
           "Content-Type": "application/json",
           "Accept": "application/json"
         },
-      }).then(response => response.json())
-        .then(value => { 
-          console.log(value)
-          if(value.result=="success"){
+     });
+     const createExamFetchResult=await createExamFetch.json(); 
+          if(createExamFetchResult.result=="success"){
             Swal.fire({
               position: "top-center",
               icon: "success",
@@ -312,7 +303,7 @@ setHasError(false)
             setTimeout(function(){
               window.location.reload();
             },2000)
-          }else if(value.result=="error"){
+          }else if(createExamFetchResult.result=="error"){
             Swal.fire({
               position: "top-center",
               icon: "Error",
@@ -321,13 +312,14 @@ setHasError(false)
               timer: 1500
             });
           }
-         })
-         .catch(error => console.error('Error:', error));
+         }
+         
     }
+    updateExamFunction();
   }
 
     
-  };
+};
 
   //onclick event end.......
   const value = "addExam";
