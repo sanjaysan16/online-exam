@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
+    <description>Onlineexamapplication Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service> 
+
+     <service name="createAddExamService" default-entity-name="ExamMaster" engine="entity-auto" invoke="create" auth="false">
+   <description>Create AddExam Service</description>
+   <auto-attributes include="pk" mode="OUT" optional="true"/>
+   <auto-attributes include="nonpk" mode="IN" optional="true"/>
+  
+   </service>
+
+   <service name="createQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
+       <description>createQuestionMaster</description>
+       <auto-attributes include="pk" mode="OUT" optional="true"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/>
+       <override name="questionDetail" optional="true"/> 
+    </service>
+
+    <service name="updateExam" default-entity-name="ExamMaster" engine="entity-auto" invoke="update" auth="false">
+       <description>updateExam</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/> 
+       <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
+     <service name="deleteExam" default-entity-name="ExamMaster" engine="entity-auto" invoke="delete" auth="false">
+       <description>deleteExam</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/>   
+        </service>
+
+   <service name="view" default-entity-name="QuestionMaster" engine="java" location="com.vastpro.onlineexamapplication.service.ViewQuestionsService" invoke="viewQuestionsService">
+   <attribute name="listOfQuestion" mode="OUT" optional="true" type="List" ></attribute>
+   </service>
+
+    <service name='DeleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
+    <auto-attributes include='pk' mode='IN' optional='false'/>
+    </service>
+
+    <service name="updateQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="update" auth="false">
+       <description>updateQuestionMaster</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/> 
+    </service>
+<!--topic services-->
+<service name="createTopicMaster" default-entity-name="TopicMaster" engine="entity-auto" invoke="create" auth="false">
+       <description>create Exam</description>
+       <auto-attributes include="pk" mode="OUT" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="false"/> 
+    </service>
+    
+    <service name="editTopicMaster" default-entity-name="TopicMaster" engine="entity-auto" invoke="update" auth="false">
+       <description>edit topic</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="false"/>
+    </service>
+    
+    <service  name="editExamTopicMapping" engine="entity-auto" default-entity-name="ExamTopicMappingMaster" invoke="update" auth="false">
+    	<description>editExamTopicMapping</description>
+    	<auto-attributes include="pk" mode="IN" optional="false"/>
+    	<auto-attributes include="nonpk" mode="IN" optional="false"/>
+    	<override name="questionsPerExam" optional="true"></override>
+    </service>
+    
+    
+    <service  name="examTopicMapping" engine="entity-auto" default-entity-name="ExamTopicMappingMaster" invoke="create" auth="false">
+    	<description>examTopicMapping</description>
+    	<auto-attributes include="pk" mode="IN" optional="false"/>
+    	<auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
+    
+    
+    <service  name="deleteExamTopicMapping" engine="entity-auto" default-entity-name="ExamTopicMappingMaster" invoke="delete" auth="false">
+    	<description>delete ExamTopicMappingMaster</description>
+    	<auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <service  name="deleteTopicMaster" engine="entity-auto" default-entity-name="TopicMaster" invoke="delete" auth="false">
+    	<description>delete Topic</description>
+    	<auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+</services>
+ 

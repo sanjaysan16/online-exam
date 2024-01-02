@@ -21,6 +21,7 @@ const ViewQuestion = () => {
         var questionList = data.questionList;
 
         setListQuestions(questionList);
+        console.log(refListQuestions.current)
       })
       .catch(error => console.error('Error:', error));
   }
@@ -99,8 +100,9 @@ const ViewQuestion = () => {
                 </tr>
               </thead>
               <tbody>
-                {listOfQuestions &&
-                  listOfQuestions.map((listData) => {
+                {refListQuestions.current ?
+                
+                  refListQuestions.current.map((listData) => {
                     return (
                       <>
                         <tr>
@@ -127,7 +129,7 @@ const ViewQuestion = () => {
                         </tr>
                       </>
                     );
-                  })}
+                  }):<h2 style={{color:'red'}}>no question in this topic</h2>}
               </tbody>
             </table>
           </div>
