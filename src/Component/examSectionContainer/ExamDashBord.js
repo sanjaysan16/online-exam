@@ -1,10 +1,13 @@
 
+import { port, protocol } from "../fetchConst";
 import Exam from "./Exam";
 
 import {useState, useEffect } from "react";
 
 
 const ExamDashBord = () => {
+  const uri = `${protocol}://${window.location.hostname}:${port}`;
+
   const [examList,setexamList]=useState([]);
  
   useEffect(()=>{     
@@ -15,9 +18,10 @@ const ExamDashBord = () => {
 
 
 function getExams(){
-fetch(`https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list`)
+fetch(`${uri}/onlineexamapplication/control/get-exam-and-exam-list`)
 .then(res=>res.json())
 .then(data=>{
+  console.log(data);
   setexamList(data.Exam_List);
 }).catch(error => console.error('Error:', error))
 }

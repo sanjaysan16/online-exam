@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react'
 import useStateRef from 'react-usestateref';
+import { port, protocol } from '../fetchConst';
 
 
 const LoginModal = () => {
 
   const [hasErrorRef, setHasError, refHasError] = useStateRef(false);
 
+  const uri = `${protocol}://${window.location.hostname}:${port}`;
 
 
   const validateLoginForm = (key, value) => {
 
     switch (key) {
-      case "username":
+      case "USERNAME":
         var validation = "[a-z0-9]+[@]{1}[a-z]{5}[.]{1}[com]";
         var regex = RegExp(validation);
 
@@ -34,7 +36,7 @@ const LoginModal = () => {
 
         }
         break;
-      case "password":
+      case "PASSWORD":
 
         if (value === "") {
           document.getElementById("error_password").classList.remove('d-none');
@@ -54,9 +56,9 @@ const LoginModal = () => {
     e.preventDefault();
     setHasError(false)
     const data = new FormData(e.target);
-    let username = data.get("username");
+    let username = data.get("USERNAME");
     console.log(username);
-    let password = data.get("password");
+    let password = data.get("PASSWORD");
     console.log(password);
     const value = Object.fromEntries(data.entries());
     document.getElementById("error_username").classList.add('d-none')
@@ -68,10 +70,10 @@ const LoginModal = () => {
 
 
     if (!refHasError.current) {
-      fetch("https://localhost:8443/onlineexamapplication/control/check-login", {
+      fetch(`${uri}/onlineexamapplication/control/login`, {
         method: 'POST',
         credentials: 'include',
-        body: JSON.stringify({ username: username, password: password }),
+        body: JSON.stringify({ USERNAME: username, PASSWORD: password }),
         headers: {
           'Content-Type': "application/json",
           'Accept': "application/json"
@@ -85,14 +87,14 @@ const LoginModal = () => {
 
           const backendResult = values.isAdmin;
           const lastName = values._lastName_;
-          if (values.ERROR_MESSAGE != null) {
+          if (values. _ERROR_MESSAGE_ != null) {
             document.getElementById("error_user").classList.remove('d-none');
             document.getElementById("error_user").classList.add('d-block');
-            document.getElementById("error_user").innerHTML = values.ERROR_MESSAGE;
+            document.getElementById("error_user").innerHTML = values. _ERROR_MESSAGE_;
           }
-          const errorMessage = values.ERROR_MESSAGE;
+          const errorMessage = values. _ERROR_MESSAGE_;
           console.log("first", errorMessage)
-          if (backendResult === "true") {
+          if (backendResult === true) {
 
             window.location.href = "/admin-view"
           }
@@ -121,10 +123,10 @@ const LoginModal = () => {
                 <p id="error_user" className="d-none mb-0 text-danger"></p>
                 <div className='row mt-2 '>
                   <label for='userInput ' className='text-dark ' ><h5> Username </h5></label>
-                  <input type='text' className='form-control border border-3' id='userInput' placeholder='Enter Username' name='username' />
+                  <input type='text' className='form-control border border-3' id='userInput' placeholder='Enter Username' name='USERNAME' />
                   <p id="error_username" className="d-none mb-0 text-danger"></p>
                   <label for='UserPassword ' className='text-dark mt-4 ' ><h5>Password</h5> </label>
-                  <input type='password' className='form-control border border-3' id='UserPassword' placeholder='Enter Password' name='password' />
+                  <input type='password' className='form-control border border-3' id='UserPassword' placeholder='Enter Password' name='PASSWORD' />
                   <p id="error_password" className="d-none mb-0 text-danger"></p>
 
                 </div>

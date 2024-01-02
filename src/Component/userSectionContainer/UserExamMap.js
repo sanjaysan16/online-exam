@@ -1,63 +1,65 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import useStateRef from 'react-usestateref';
+import { port, protocol } from '../fetchConst';
 
 const UserExamMap = () => {
-    const [examList, setExamList,refExamList] = useStateRef("");
-    const [hasError,setHasError,hasErrorRef]=useStateRef(false);
+    const uri = `${protocol}://${window.location.hostname}:${port}`;
+    const [examList, setExamList, refExamList] = useStateRef("");
+    const [hasError, setHasError, hasErrorRef] = useStateRef(false);
     const location = useLocation();
     console.log(location)
     const gender = location.state.user.gender;
-    
+
     useEffect(() => {
-       
+
         getExams();
     }, []);
 
     const getExams = async () => {
-        const examFetch = await fetch('https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list',{ credentials: "include" });
+        const examFetch = await fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`, { credentials: "include" });
         const examListJsonData = await examFetch.json();
-        
-        console.log("insideEffect",examListJsonData)
+
+        console.log("insideEffect", examListJsonData)
 
         setExamList(examListJsonData.Exam_List);
     }
 
-    
+
     //validation for
-   const chooseExamValidation=(userExamMapping)=>{
-        if(userExamMapping.length===0){
+    const chooseExamValidation = (userExamMapping) => {
+        if (userExamMapping.length === 0) {
             document.getElementById('choose-exam-error').classList.remove('d-none')
             document.getElementById('choose-exam-error').classList.add('d-block')
-            document.getElementById('choose-exam-error').innerHTML="*please choose the exam"  
-            setHasError(true); 
-        }else{
-          document.getElementById('choose-exam-error').classList.remove('d-block')
-          document.getElementById('choose-exam-error').classList.add('d-none')
-          document.getElementById('choose-exam-error').innerHTML=""
+            document.getElementById('choose-exam-error').innerHTML = "*please choose the exam"
+            setHasError(true);
+        } else {
+            document.getElementById('choose-exam-error').classList.remove('d-block')
+            document.getElementById('choose-exam-error').classList.add('d-none')
+            document.getElementById('choose-exam-error').innerHTML = ""
         }
-           
-     }
 
-    const checkboxOnSubmit=(e)=>{
+    }
+
+    const checkboxOnSubmit = (e) => {
         setHasError(false);
         e.preventDefault();
-        
-        var chooseExamForm=new FormData(e.target);
-        var chooseExamObject=Object.fromEntries(chooseExamForm.entries());
-         
-       var userExamMapping =Object.entries(chooseExamObject);       
-          chooseExamValidation(userExamMapping);
-          var userPartyId=[];
-          userPartyId.push("userPartyId",location.state.user.partyId);
-          userExamMapping.push(userPartyId)
-          console.log(userExamMapping)
-     
+
+        var chooseExamForm = new FormData(e.target);
+        var chooseExamObject = Object.fromEntries(chooseExamForm.entries());
+
+        var userExamMapping = Object.entries(chooseExamObject);
+        chooseExamValidation(userExamMapping);
+        var userPartyId = [];
+        userPartyId.push("userPartyId", location.state.user.partyId);
+        userExamMapping.push(userPartyId)
+        console.log(userExamMapping)
+
     }
-    
-    console.log("uppercase",gender.toUpperCase())
-   
-   
+
+    console.log("uppercase", gender.toUpperCase())
+
+
     return (
         <div className='justify-content-sm-evenly py-3 px-2'>
             <div className='row px-5'>
@@ -82,7 +84,7 @@ const UserExamMap = () => {
                         <h1>Choose Exam </h1>
                     </div>
                     <div className='card-body pb-4'>
-                        
+
                         <p className='pt-0 px-2 m-0' style={{ "color": "#808B96" }}>Note : Please click on the arrow botton and choose exam for your user.</p>
                         <p className='pt-0 px-2 text-danger d-none m-0' id='choose-exam-error'></p>
 
@@ -100,11 +102,11 @@ const UserExamMap = () => {
                                         <div class="accordion-body">
 
                                             <label>Choose Exam:</label>
-                                            {console.log("refExamList.current",refExamList.current)}
-                                            {refExamList.current&&refExamList.current.map((exam,index) => {
+                                            {console.log("refExamList.current", refExamList.current)}
+                                            {refExamList.current && refExamList.current.map((exam, index) => {
                                                 return (
                                                     <div className='px-5'>
-                                                        <input type='checkbox' name={`choose-exam-${index}`} value={exam.examId}/> <text>{exam.examName}</text>
+                                                        <input type='checkbox' name={`choose-exam-${index}`} value={exam.examId} /> <text>{exam.examName}</text>
                                                     </div>
 
                                                 )

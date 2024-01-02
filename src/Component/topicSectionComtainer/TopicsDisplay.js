@@ -4,21 +4,26 @@ import AddTopic from "./AddTopic";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import useStateRef from "react-usestateref";
+import { port, protocol } from "../fetchConst";
 
 const TopicsDisplay = () => {
-  
-  const [topicdata, setTopicdata,refTopicData] = useStateRef("");
+
+  const [topicdata, setTopicdata, refTopicData] = useStateRef("");
   const [topicList, setTopicList] = useState();
   const [percentage, setPercentage] = useState();
   const [passPercentage, setPassPercentage] = useState();
   const [name, setName] = useState();
+
+  const uri = `${protocol}://${window.location.hostname}:${port}`;
 
   var url = window.location.href.includes("?");
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const examIds = urlParams.get("examId");
   const examNames = urlParams.get("examName");
+  console.log(urlParams);
   console.log(examIds);
+  console.log(examNames);
   useEffect(() => {
     if (url) {
       displayTopic();
@@ -27,7 +32,7 @@ const TopicsDisplay = () => {
 
   const displayTopic = () => {
     fetch(
-      `https://localhost:8443/onlineexamapplication/control/ExamTopicMapping?examId=${examIds}`,
+      `${uri}/onlineexamapplication/control/TopicsList?examId=${examIds}`,
       { credentials: "include" }
     )
       .then((response) => response.json())
@@ -47,7 +52,7 @@ const TopicsDisplay = () => {
     setTopicList(topicId);
 
     fetch(
-      `https://localhost:8443/onlineexamapplication/control/GetTopicMaster?examId=${examIds}&&topicId=${topicId}`,
+      `${uri}/onlineexamapplication/control/GetTopicMaster?examId=${examIds}&&topicId=${topicId}`,
       {
         credentials: "include",
       }
@@ -62,9 +67,9 @@ const TopicsDisplay = () => {
         setPercentage(responsePercentage);
         setPassPercentage(responseTopicPassPercentage);
         setName(responseTopicName);
-       
+
       });
-      
+
   };
 
   const deleteTopic = (topicId) => {
@@ -80,7 +85,7 @@ const TopicsDisplay = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         fetch(
-          `https://localhost:8443/onlineexamapplication/control/DeleteTopicMaster?examId=${examIds}&&topicId=${topicId}`,
+          `${uri}/onlineexamapplication/control/DeleteTopicMaster?examId=${examIds}&&topicId=${topicId}`,
           { credentials: "include" }
         ).then((response) => response.json());
         Swal.fire({
@@ -110,12 +115,12 @@ const TopicsDisplay = () => {
         name={name}
         examId={examIds}
       />
-     
+
       <div>
         <h3>
           {examNames}
           <button
-            className="btn btn-success m-1"
+            className="btn btn-outline-success m-1"
             data-bs-toggle="modal"
             data-bs-target="#addTopic"
             style={{ float: "right" }}
@@ -126,7 +131,9 @@ const TopicsDisplay = () => {
         </h3>
       </div>
 
-      <table className="table">
+
+
+      <table className="table border">
         <thead>
           <tr>
             <th scope="col">TopicName</th>
@@ -136,16 +143,16 @@ const TopicsDisplay = () => {
         </thead>
 
         <tbody>
-         
-          {refTopicData.current.length != 0?
-            refTopicData.current&&refTopicData.current.map((data) => {
+
+          {refTopicData.current.length != 0 ?
+            refTopicData.current && refTopicData.current.map((data) => {
               return (
                 <tr key={data.topicId}>
                   <th scope="row">{data.topicName}</th>
                   <th scope="row"></th>
                   <th scope="row">
                     <button
-                      className="btn btn-danger m-1"
+                      className="btn btn-outline-danger m-1"
                       title="delete topic"
                       style={{ float: "right" }}
                       onClick={() => deleteTopic(data.topicId)}
@@ -153,7 +160,7 @@ const TopicsDisplay = () => {
                       Delete
                     </button>
                     <button
-                      className="btn btn-info m-1"
+                      className="btn btn-outline-info m-1"
                       title="edit topic"
                       style={{ float: "right" }}
                       data-bs-toggle="modal"
@@ -167,7 +174,7 @@ const TopicsDisplay = () => {
                     <a href={`add-question?topicId=${data.topicId}`}>
                       {" "}
                       <button
-                        className="btn btn-success m-1"
+                        className="btn btn-outline-success m-1"
                         style={{ float: "right" }}
                       >
                         Add Questions
@@ -176,9 +183,10 @@ const TopicsDisplay = () => {
                   </th>
                 </tr>
               );
-            }):<h1>No topics Available</h1>}
+            }) : <h1>No topics Available</h1>}
         </tbody>
       </table>
+
     </>
   );
 };
