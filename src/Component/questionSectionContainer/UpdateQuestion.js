@@ -19,7 +19,7 @@ const UpdateQuestion = () => {
   
   const questionList = () => {
     fetch(
-      `https://localhost:8443/onlineexamapplication/control/update-questionmaster?questionId=${questionId}&&topicId=${topicId}`, { credentials: "include" }
+      `https://localhost:8443/onlineexamapplication/control/update-question?questionId=${questionId}&&topicId=${topicId}`, { credentials: "include" }
     )
       .then((res) => res.json())
       .then((fetchdata) => {
@@ -187,7 +187,7 @@ const UpdateQuestion = () => {
     if(!refHasError.current){
       
     fetch(
-      `https://localhost:8443/onlineexamapplication/control/update-questionmaster?questionId=${questionId}&&topicId=${topicId}`,
+      `https://localhost:8443/onlineexamapplication/control/update-question?questionId=${questionId}&&topicId=${topicId}`,
       {
         method: "POST",
         credentials: "include",

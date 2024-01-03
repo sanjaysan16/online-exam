@@ -132,17 +132,17 @@ under the License.
     </request-map>
 
 <!--create question-->
-    <request-map uri="CreateQuestionMaster">
+    <request-map uri="create-new-question">
     <security https="true" auth="false"/>
-    <event type="java" path="com.vastpro.onlineexamapplication.event.CreateQuestionMaster" invoke="createQuestionMaster"/>
+    <event type="java" path="com.vastpro.onlineexamapplication.event.QusetionEvent" invoke="createNewQuestion"/>
      <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>	
      </request-map>
 
 <!--view question-->
-  <request-map uri='viewQuestions'>
+  <request-map uri='view-questions'>
   <security https="true" auth="false"/>
-  <event type="java" path="com.vastpro.onlineexamapplication.event.ViewQuestionsEvent" invoke="viewQuestions"/>
+  <event type="java" path="com.vastpro.onlineexamapplication.event.QusetionEvent" invoke="viewQuestions"/>
   <response name="success" type="request" value="json"/>
   <response name="error" type="request" value="json"/>
   </request-map>
@@ -150,15 +150,15 @@ under the License.
   <!-- Delete question-->
   <request-map uri='delete-question'>
   <security https='true' auth='false'/>
-  <event type='java' path='com.vastpro.onlineexamapplication.event.DeleteQuestionEvent' invoke='deleteQuestion'/>
+  <event type='java' path='com.vastpro.onlineexamapplication.event.QusetionEvent' invoke='deleteQuestion'/>
   <response name='success' type='request' value='json'/>
   <response name='error' type='request' value='json'/>
   </request-map>
 
   <!--update question-->
-   <request-map uri="update-questionmaster">
+   <request-map uri="update-question">
 	    <security https="true" auth="false"/>
-	    <event type="java" path="com.vastpro.onlineexamapplication.event.UpdateQuestionMaster" invoke="updateQuestionMaster"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.QusetionEvent" invoke="updateExistingQuestion"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>

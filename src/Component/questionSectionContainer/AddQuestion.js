@@ -169,7 +169,7 @@ if(!refHasError.current){
     answers.questionType=questionType;
 
     const res = await fetch(
-      `https://localhost:8443/onlineexamapplication/control/CreateQuestionMaster?topicId=${topicId}`,
+      `https://localhost:8443/onlineexamapplication/control/create-new-question?topicId=${topicId}`,
       {
         method: "POST",
         credentials: "include",

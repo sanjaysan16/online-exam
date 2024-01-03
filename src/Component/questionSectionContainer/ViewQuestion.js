@@ -13,7 +13,7 @@ const ViewQuestion = () => {
   }, []);
   // get question list fetchcall
   function fetchCall() {
-    fetch(`https://localhost:8443/onlineexamapplication/control/viewQuestions?topicId=${topicId}`, { credentials: "include" })
+    fetch(`https://localhost:8443/onlineexamapplication/control/view-questions?topicId=${topicId}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         var questionList = data.questionList;
@@ -87,7 +87,7 @@ const ViewQuestion = () => {
             <h2> Question List</h2>
           </div>
           <div className="cardbody mt-1">
-            <table className="table  ">
+            <table className="table  table-hover">
               <thead className="table-light  my-5 ">
                 <tr className="">
                   <th>QuestionId</th>

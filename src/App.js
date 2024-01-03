@@ -18,7 +18,7 @@ import UpdateQuestion from './Component/questionSectionContainer/UpdateQuestion'
 import ViewUsers from './Component/userSectionContainer/ViewUsers'
 import UserExamMap from './Component/userSectionContainer/UserExamMap'
 import AdminView from "./Component/adminSectionContainer/AdminView";
-
+import DashBord from "./Component/DashBordContainerSection/DashBord";
 
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-
+          <Route path='/dash-bord' element={<DashBord/>}/>
           <Route path='/' element={<Welcome />} />
           <Route path='/admin-view' element={<AdminView/>}/>
           <Route path='/add-exam' element={<AddExam />} />

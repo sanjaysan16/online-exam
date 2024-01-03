@@ -55,3 +55,13 @@
 .custom-bd-color{
   border: 2px solid rgb(108, 124, 143);
 }
+/* .dashbord-card-header{
+  background-color: rgb(37, 170, 242);
+}
+.dashbord-card-body{
+  background-color: rgb(196, 226, 242);
+} */
+.body-hover:hover{
+
+  background-color: rgb(234, 231, 231);
+}
