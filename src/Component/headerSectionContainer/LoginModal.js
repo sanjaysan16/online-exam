@@ -141,23 +141,7 @@ const LoginModal = () => {
                   <button className='btn btn-secondary text-center ' type='submit'>Login</button>
                 </div>
               </div>
-              <div className="row mb-2 px-3">
-                <div className="col-8 gx-5">
-                  <span className="text-dark">
-                    If you don't have account{" "}
-                    <a href="register">RegisterHere</a>{" "}
-                  </span>
-                </div>
-
-                <div className="col-4">
-                  <button
-                    className="btn btn-secondary text-center "
-                    type="submit"
-                  >
-                    Login
-                  </button>
-                </div>
-              </div>
+            
             </form>
           </div>
         </div>

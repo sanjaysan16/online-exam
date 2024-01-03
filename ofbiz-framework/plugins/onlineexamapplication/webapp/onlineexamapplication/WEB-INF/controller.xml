@@ -42,12 +42,16 @@ under the License.
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
 	
+	
+	
 	<request-map uri="login">
     	<security https="true" auth="false"/>
     	<event type="java" path="com.vastpro.onlineexamapplication.event.Login" invoke="login"/>
     	<response name="success" type="request" value="json"/>
     	<response name="error" type="request" value="json"/>
     </request-map>
+    
+   
 	
 <!--user login-->
 	<request-map uri="check-login">
@@ -204,6 +208,13 @@ under the License.
      <request-map uri="get-users">
 	    <security https="true" auth="false"/>
 	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="getUsersOfAdmin"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>
+    </request-map>
+    
+      <request-map uri="get-partyid">
+	    <security https="true" auth="false"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.GetPartyId" invoke="getPartyId"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>

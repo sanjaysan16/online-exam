@@ -2,6 +2,7 @@ package com.vastpro.onlineexamapplication.event;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
@@ -17,13 +18,16 @@ public class CheckLoginFlag {
 	public static String afterLogin(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator=(Delegator)request.getAttribute(OnlineExam.DELEGATOR);
 		GenericValue userDetails = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
-
+		  HttpSession session = request.getSession();
 		String partyId = OnlineExam.NULL;
 
 		
 		if (UtilValidate.isNotEmpty(userDetails)) {
 			partyId = (String) userDetails.get("partyId");
 			isUserlogin = false;
+			request.setAttribute("partyId", partyId);
+		     session.setAttribute("partyId", partyId);
+
 			if(UtilValidate.isNotEmpty(partyId)) {
 				 
 				try {
@@ -49,7 +53,6 @@ public class CheckLoginFlag {
 			
 		}
 		request.setAttribute("isUserlogin", isUserlogin);
-		request.setAttribute("partyId", partyId);
 		return OnlineExam.SUCCESS;
 	}
 }
