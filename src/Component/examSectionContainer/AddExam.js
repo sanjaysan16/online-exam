@@ -35,11 +35,7 @@ const AddExam = () => {
   useEffect(() => {
     console.log(url);
     if (url) {
-
-      console.log(examId);
-
       examFetch();
-
     }
 
   }, []);
@@ -320,259 +316,256 @@ const AddExam = () => {
           }
         }
 
-      }
-      updateExamFunction();
+
+      };
+
+      //onclick event end.......
+      const value = "addExam";
     }
+    return (
+      <>
 
-
-  };
-
-  //onclick event end.......
-  const value = "addExam";
-  return (
-    <>
-
-      <div className="container pb-5">
-        <div className="row pb-5">
-          <div className="col-sm-7 offset-md-3 mt-5">
-            <div className="card custom-bd-color">
-              <div className="card-header text-center">
-                {url == false ? <h2>Add Exam</h2> : <h2>Update Exam</h2>}
-              </div>
-              <div className="card-body">
-                <form method="POST" onSubmit={examFormValidate}>
-                  <div className="form-group">
-                    <label for="examname">Exam Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="examName"
-                      placeholder="Exam Name"
-                      name="examName"
-                      value={examName}
-                      onChange={(e) => { setExamName(e.target.value) }}
-                    ></input>
-                    <p id="examName_error" className="d-none text-danger"></p>
-                  </div>
-
-
-
-
-                  <div className="">
+        <div className="container pb-5">
+          <div className="row pb-5">
+            <div className="col-sm-7 offset-md-3 mt-5">
+              <div className="card custom-bd-color">
+                <div className="card-header text-center">
+                  {url == false ? <h2>Add Exam</h2> : <h2>Update Exam</h2>}
+                </div>
+                <div className="card-body">
+                  <form method="POST" onSubmit={examFormValidate}>
                     <div className="form-group">
-                      <label for="description">Description</label>
-                      <textarea
-                        type="text"
-                        className="form-control"
-                        id="description"
-                        placeholder="Write ur description"
-                        name="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      ></textarea>
-                      <p
-                        id="description_error"
-                        className="d-none text-danger"
-                      ></p>
-                    </div>
-                  </div>
-
-
-                  <div className="form-group">
-                    <div className=" ">
-                      <label for="duration">Duration</label>
+                      <label for="examname">Exam Name</label>
                       <input
                         type="text"
-                        id="duration"
                         className="form-control"
-                        placeholder="minutes"
-                        name="durationMinutes"
-                        min='0'
-                        value={durationMinutes}
-                        onChange={(e) => setDurationMinutes(e.target.value)}
+                        id="examName"
+                        placeholder="Exam Name"
+                        name="examName"
+                        value={examName}
+                        onChange={(e) => { setExamName(e.target.value) }}
                       ></input>
-                      <p
-                        id="durationMinutes_error"
-                        className="d-none text-danger"
-                      ></p>
+                      <p id="examName_error" className="d-none text-danger"></p>
                     </div>
-                  </div>
 
-                  <div className="row">
-                    <div className="col-sm-6 ">
+
+
+
+                    <div className="">
                       <div className="form-group">
-                        <label for="creationdate">Creation Date</label>
-                        <input
-                          type="datetime-local"
+                        <label for="description">Description</label>
+                        <textarea
+                          type="text"
                           className="form-control"
-                          id="creationdate"
-                          name="creationDate"
-                          value={creationdate}
-                          onChange={(e) => setCreationDate(e.target.value)}
-                        ></input>
+                          id="description"
+                          placeholder="Write ur description"
+                          name="description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                        ></textarea>
                         <p
-                          id="creationDate_error"
+                          id="description_error"
                           className="d-none text-danger"
                         ></p>
                       </div>
                     </div>
 
-                    <div className="col-sm-5   offset-md-1">
-                      <div className="form-group">
-                        <label for="expirationdate">Expiration Date</label>
+
+                    <div className="form-group">
+                      <div className=" ">
+                        <label for="duration">Duration</label>
                         <input
-                          type="datetime-local"
+                          type="text"
+                          id="duration"
                           className="form-control"
-                          id="expirationdate"
-                          name="expirationDate"
-                          value={expirationdate}
-                          onChange={(e) => { setExpirationDate(e.target.value) }}
+                          placeholder="minutes"
+                          name="durationMinutes"
+                          min='0'
+                          value={durationMinutes}
+                          onChange={(e) => setDurationMinutes(e.target.value)}
                         ></input>
                         <p
-                          id="expirationDate_error"
+                          id="durationMinutes_error"
                           className="d-none text-danger"
                         ></p>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="row">
-                    <div className="col-sm-6 offset-md-0">
-                      <div className="form-group">
-                        <lable >No of Question</lable>
+                    <div className="row">
+                      <div className="col-sm-6 ">
+                        <div className="form-group">
+                          <label for="creationdate">Creation Date</label>
+                          <input
+                            type="datetime-local"
+                            className="form-control"
+                            id="creationdate"
+                            name="creationDate"
+                            value={creationdate}
+                            onChange={(e) => setCreationDate(e.target.value)}
+                          ></input>
+                          <p
+                            id="creationDate_error"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-5   offset-md-1">
+                        <div className="form-group">
+                          <label for="expirationdate">Expiration Date</label>
+                          <input
+                            type="datetime-local"
+                            className="form-control"
+                            id="expirationdate"
+                            name="expirationDate"
+                            value={expirationdate}
+                            onChange={(e) => { setExpirationDate(e.target.value) }}
+                          ></input>
+                          <p
+                            id="expirationDate_error"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-sm-6 offset-md-0">
+                        <div className="form-group">
+                          <lable >No of Question</lable>
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="noof.qa"
+                            name="noOfQuestions"
+                            min='0'
+                            value={noOfQuestions}
+                            onChange={(e) => setNoOfquestions(e.target.value)}
+                          ></input>
+                          <p
+                            id="noOfQuestions_error"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-5 offset-md-1">
+                        <label for="passpercentage">PassPercentage</label>
                         <input
                           type="number"
+                          id="passpercentage"
                           className="form-control"
-                          id="noof.qa"
-                          name="noOfQuestions"
+                          name="passPercentage"
                           min='0'
-                          value={noOfQuestions}
-                          onChange={(e) => setNoOfquestions(e.target.value)}
+                          value={passPercentage}
+                          onChange={(e) => setPassPercentage(e.target.value)}
                         ></input>
                         <p
-                          id="noOfQuestions_error"
+                          id="passPercentage_error"
                           className="d-none text-danger"
                         ></p>
                       </div>
                     </div>
 
-                    <div className="col-sm-5 offset-md-1">
-                      <label for="passpercentage">PassPercentage</label>
-                      <input
-                        type="number"
-                        id="passpercentage"
-                        className="form-control"
-                        name="passPercentage"
-                        min='0'
-                        value={passPercentage}
-                        onChange={(e) => setPassPercentage(e.target.value)}
-                      ></input>
-                      <p
-                        id="passPercentage_error"
-                        className="d-none text-danger"
-                      ></p>
-                    </div>
-                  </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <div className="form-group">
+                          <lable for="questionrandomized">
+                            Question Ramdomized
+                          </lable>
+                          <input
+                            type="text"
+                            id="questionrandomized"
+                            className="form-control"
+                            placeholder="Question Randomized"
+                            name="questionsRandomized"
+                            value={questionsRandomized}
+                            onChange={(e) => setQuestionsRandomized(e.target.value)}
+                          ></input>
+                          <p
+                            id="questionsRandomized_error"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                      </div>
 
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <lable for="questionrandomized">
-                          Question Ramdomized
-                        </lable>
-                        <input
-                          type="text"
-                          id="questionrandomized"
-                          className="form-control"
-                          placeholder="Question Randomized"
-                          name="questionsRandomized"
-                          value={questionsRandomized}
-                          onChange={(e) => setQuestionsRandomized(e.target.value)}
-                        ></input>
-                        <p
-                          id="questionsRandomized_error"
-                          className="d-none text-danger"
-                        ></p>
+                      <div className="col-sm-5 offset-md-1">
+                        <div className="form-group">
+                          <lable for="answermust">Answer Must</lable>
+                          <input
+                            type="text"
+                            id="answermust"
+                            className="form-control"
+                            placeholder="Answer Must"
+                            name="answersMust"
+                            value={answerMust}
+                            onChange={(e) => setAnswerMust(e.target.value)}
+                          ></input>
+                          <p
+                            id="answersMust_error"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="col-sm-5 offset-md-1">
-                      <div className="form-group">
-                        <lable for="answermust">Answer Must</lable>
-                        <input
-                          type="text"
-                          id="answermust"
-                          className="form-control"
-                          placeholder="Answer Must"
-                          name="answersMust"
-                          value={answerMust}
-                          onChange={(e) => setAnswerMust(e.target.value)}
-                        ></input>
-                        <p
-                          id="answersMust_error"
-                          className="d-none text-danger"
-                        ></p>
+                    <div className="row">
+                      <div className="col-sm-6 ">
+                        <div className="form-group">
+                          <label for="EnableNegativeMarks">
+                            EnableNegativeMarks
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="EnableNegativeMarks"
+                            name="enableNegativeMark"
+                            placeholder="enableNegativeMark"
+                            value={enableNegativeMark}
+                            onChange={(e) => setEnableNegativeMark(e.target.value)}
+                          ></input>
+                          <p
+                            id="enableNegativeMark_error"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-5 offset-md-1">
+                        <div className="form-group">
+                          <label for="nagativeMarksValues">
+                            NegativeMarksValue
+                          </label>
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="nagativemarksvalues"
+                            name="negativeMarkValue"
+                            placeholder="negativeMarkValue"
+                            min='0'
+                            value={negativeMarkValue}
+                            onChange={(e) => setNegativeMarkValue(e.target.value)}
+                          ></input>
+                          <p
+                            id="negativeMarkValue_error"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="row">
-                    <div className="col-sm-6 ">
-                      <div className="form-group">
-                        <label for="EnableNegativeMarks">
-                          EnableNegativeMarks
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="EnableNegativeMarks"
-                          name="enableNegativeMark"
-                          placeholder="enableNegativeMark"
-                          value={enableNegativeMark}
-                          onChange={(e) => setEnableNegativeMark(e.target.value)}
-                        ></input>
-                        <p
-                          id="enableNegativeMark_error"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
+                    <div className="text-center mt-2">
+                      <button type="submit" className="btn btn-success">{url == false ? <text>Add Exam</text> : <text>Update Exam</text>}</button>
                     </div>
-
-                    <div className="col-sm-5 offset-md-1">
-                      <div className="form-group">
-                        <label for="nagativeMarksValues">
-                          NegativeMarksValue
-                        </label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          id="nagativemarksvalues"
-                          name="negativeMarkValue"
-                          placeholder="negativeMarkValue"
-                          min='0'
-                          value={negativeMarkValue}
-                          onChange={(e) => setNegativeMarkValue(e.target.value)}
-                        ></input>
-                        <p
-                          id="negativeMarkValue_error"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="text-center mt-2">
-                    <button type="submit" className="btn btn-success">{url == false ? <text>Add Exam</text> : <text>Update Exam</text>}</button>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
+          </div >
         </div >
-      </div >
 
-    </>
-  );
+      </>
+    );
+  }
 }
-
 export default AddExam;

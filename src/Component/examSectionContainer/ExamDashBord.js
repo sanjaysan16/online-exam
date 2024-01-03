@@ -15,8 +15,6 @@ const ExamDashBord = () => {
           getExams();
   },[]);
 
-
-
 function getExams(){
 fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`)
 .then(res=>res.json())
@@ -56,4 +54,4 @@ fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`)
   )
 }
 
-export default ExamDashBord
+export default ExamDashBord;
