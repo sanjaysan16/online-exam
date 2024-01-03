@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import useStateRef from 'react-usestateref';
+import { port, protocol } from '../fetchConst';
 
 const UserExamMap = () => {
-    const [examList, setExamList,refExamList] = useStateRef("");
-    const [hasError,setHasError,hasErrorRef]=useStateRef(false);
+    const uri = `${protocol}://${window.location.hostname}:${port}`;
+    const [examList, setExamList, refExamList] = useStateRef("");
+    const [hasError, setHasError, hasErrorRef] = useStateRef(false);
     const location = useLocation();
     const gender = location.state.user.gender;
 
@@ -14,26 +16,24 @@ const UserExamMap = () => {
     }, []);
 
     const getExams = async () => {
-        const examFetch = await fetch('https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list',{ credentials: "include" });
+        const examFetch = await fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`, { credentials: "include" });
         const examListJsonData = await examFetch.json();
         setExamList(examListJsonData.Exam_List);
     }
 
-    
+
     //validation for
    const chooseExamValidation=(userExamMapping)=>{
         if(userExamMapping.length<=1){
             document.getElementById('choose-exam-error').classList.remove('d-none')
             document.getElementById('choose-exam-error').classList.add('d-block')
-            document.getElementById('choose-exam-error').innerHTML="*please choose the exam"  
-            setHasError(true); 
-        }else{
-          document.getElementById('choose-exam-error').classList.remove('d-block')
-          document.getElementById('choose-exam-error').classList.add('d-none')
-          document.getElementById('choose-exam-error').innerHTML=""
+            document.getElementById('choose-exam-error').innerHTML = "*please choose the exam"
+            setHasError(true);
+        } else {
+            document.getElementById('choose-exam-error').classList.remove('d-block')
+            document.getElementById('choose-exam-error').classList.add('d-none')
+            document.getElementById('choose-exam-error').innerHTML = ""
         }
-           
-     }
 
     const chooseExamOnSubmit=(e)=>{
         setHasError(false);
@@ -87,7 +87,7 @@ const UserExamMap = () => {
                         <h1>Choose Exam </h1>
                     </div>
                     <div className='card-body pb-4'>
-                        
+
                         <p className='pt-0 px-2 m-0' style={{ "color": "#808B96" }}>Note : Please click on the arrow botton and choose exam for your user.</p>
                         <p className='pt-0 px-2 text-danger d-none m-0' id='choose-exam-error'></p>
 
@@ -105,8 +105,8 @@ const UserExamMap = () => {
                                         <div class="accordion-body">
 
                                             <label>Choose Exam:</label>
-                                            {console.log("refExamList.current",refExamList.current)}
-                                            {refExamList.current&&refExamList.current.map((exam,index) => {
+                                            {console.log("refExamList.current", refExamList.current)}
+                                            {refExamList.current && refExamList.current.map((exam, index) => {
                                                 return (
                                                     <div className='px-5'>
                                                         <input type='checkbox' name={`choose-exam-${index}`} value={exam.examId}/> <text>{exam.examName}</text>
@@ -133,4 +133,4 @@ const UserExamMap = () => {
     )
 }
 
-export default UserExamMap
+export default UserExamMap;
