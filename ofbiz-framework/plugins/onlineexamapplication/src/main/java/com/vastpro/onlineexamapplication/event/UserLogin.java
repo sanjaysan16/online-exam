@@ -35,9 +35,8 @@ public class UserLogin{
 
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		Locale locale = UtilHttp.getLocale(request);
-      Map<String, Object> fieldsMap = UtilHttp.getCombinedMap(request);
-      String username = (String) fieldsMap.get("username");
-		
+        Map<String, Object> fieldsMap = UtilHttp.getCombinedMap(request);
+        String username = (String) fieldsMap.get("username");
 		
 		if(UtilValidate.isNotEmpty(username)||username!=null) {
 			

@@ -30,28 +30,54 @@ under the License.
         </description>
     </service> 
 
-     <service name="createAddExamService" default-entity-name="ExamMaster" engine="entity-auto" invoke="create" auth="false">
-   <description>Create AddExam Service</description>
-   <auto-attributes include="pk" mode="OUT" optional="true"/>
-   <auto-attributes include="nonpk" mode="IN" optional="true"/>
-  
+    <!-- Exam Master services -->
+    
+   <service name="createExamService" default-entity-name="ExamMaster" engine="entity-auto" invoke="create" auth="false">
+	   <description>Create AddExam Service</description>
+	   <auto-attributes include="pk" mode="OUT" optional="true"/>
+	   <auto-attributes include="nonpk" mode="IN" optional="true"/>
    </service>
 
+<<<<<<< HEAD
 
     <service name="updateExam" default-entity-name="ExamMaster" engine="entity-auto" invoke="update" auth="false">
+=======
+   <service name="updateExam" default-entity-name="ExamMaster" engine="entity-auto" invoke="update" auth="false">
+>>>>>>> c1c51dbb8bfd8ce6c9a8697dd7a90dcb0124e3ab
        <description>updateExam</description>
        <auto-attributes include="pk" mode="IN" optional="false"/> 
        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     
-     <service name="deleteExam" default-entity-name="ExamMaster" engine="entity-auto" invoke="delete" auth="false">
+    <service name="deleteExam" default-entity-name="ExamMaster" engine="entity-auto" invoke="delete" auth="false">
        <description>deleteExam</description>
        <auto-attributes include="pk" mode="IN" optional="false"/>   
-        </service>
+    </service>
+    
+   <service name="createQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
+       <description>createQuestionMaster</description>
+       <auto-attributes include="pk" mode="OUT" optional="true"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/>
+       <override name="questionDetail" optional="true"/>
+    </service>
 
 
+<<<<<<< HEAD
 <!--topic services-->
 <service name="createTopicMaster" default-entity-name="TopicMaster" engine="entity-auto" invoke="create" auth="false">
+=======
+    <service name='DeleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
+    <auto-attributes include='pk' mode='IN' optional='false'/>
+    </service>
+
+    <service name="updateQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="update" auth="false">
+       <description>updateQuestionMaster</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/> 
+    </service>
+    <!--topic services-->
+    <service name="createTopicMaster" default-entity-name="TopicMaster" engine="entity-auto" invoke="create" auth="false">
+>>>>>>> c1c51dbb8bfd8ce6c9a8697dd7a90dcb0124e3ab
        <description>create Exam</description>
        <auto-attributes include="pk" mode="OUT" optional="false"/>
        <auto-attributes include="nonpk" mode="IN" optional="false"/> 
@@ -89,6 +115,7 @@ under the License.
     	<auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     
+<<<<<<< HEAD
     <service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
            <description>createQuestionMaster</description>
        <auto-attributes include="pk" mode="OUT" optional="true"/>
@@ -103,6 +130,14 @@ under the License.
        <description>updateQuestionMaster</description>
        <auto-attributes include="pk" mode="IN" optional="false"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/> 
+=======
+     <!--UserExamMapping services-->
+     
+    <service name="createUserExamMapping" default-entity-name="UserExamMappingMaster" engine="entity-auto" invoke="create" auth="false">
+       <description>create UserExamMapping</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="false"/> 
+>>>>>>> c1c51dbb8bfd8ce6c9a8697dd7a90dcb0124e3ab
     </service>
 
 </services>

@@ -41,9 +41,16 @@ under the License.
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
-
+	
+	<request-map uri="login">
+    	<security https="true" auth="false"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.Login" invoke="login"/>
+    	<response name="success" type="request" value="json"/>
+    	<response name="error" type="request" value="json"/>
+    </request-map>
+	
 <!--user login-->
-<request-map uri="user-login">
+	<request-map uri="check-login">
     	<security https="true" auth="false"/>
     	<event type="java" path="com.vastpro.onlineexamapplication.event.CheckLoginFlag" invoke="afterLogin"/>
     	<response name="success" type="request" value="json"/>
@@ -51,7 +58,7 @@ under the License.
     </request-map>
 
     <!--check userlogin-->
-    <request-map uri="check-login">
+    <request-map uri="user-login">
     	<security https="true" auth="false"/>
     	<event type="java" path="com.vastpro.onlineexamapplication.event.UserLogin" invoke="login"/>
     	<response name="success" type="request" value="json"/>
@@ -60,73 +67,79 @@ under the License.
     <!--user logout-->
     <request-map uri="user-logout">
     	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.Logout" invoke="logout"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.Login" invoke="logout"/>
     	<response name="success" type="request" value="json"/>
     	<response name="error" type="request" value="json"/>
     </request-map>
 
-    <!--add exam-->
-     <request-map uri="add-exam">
-    <security https="true" auth="false"/>
-    <event type="java" path="com.vastpro.onlineexamapplication.event.AddExamEvent" invoke="addExamEvent"></event>
-    <response name="success" type="request" value="json"/>
-    <response name="error" type="view" value="main"/>
-    </request-map>
-  <!--List Exam-->
-    <request-map uri="get-exam-or-exam-list">
-    	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.GetExamAndExamList" invoke="getExamAndExamList"/>
-	    <response name="success" type="request" value="json"/>
-	    <response name="error" type="request" value="json"/>	    
-    </request-map>
-
-<!--update exam-->
-<request-map uri="update-exam">
+    <!--create exam-->
+    
+     <request-map uri="create-exam">
 	    <security https="true" auth="false"/>
-	    <event type="java" path="com.vastpro.onlineexamapplication.event.UpdateExam" invoke="updateExam"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.ExamMasterEvent" invoke="createExam"/>	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="view" value="main"/>
+    </request-map>
+    
+    <!--update exam-->
+    
+	<request-map uri="update-exam">
+	    <security https="true" auth="false"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.ExamMasterEvent" invoke="updateExam"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>
 
     <!--delete exam-->
+    
      <request-map uri="delete-exam">
 	    <security https="true" auth="false"/>
-	    <event type="java" path="com.vastpro.onlineexamapplication.event.DeleteExam" invoke="deleteExam"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.ExamMasterEvent" invoke="deleteExam"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>
+    
+   <!--List Exam-->
+   
+    <request-map uri="get-exam-or-exam-list">
+    	<security https="true" auth="false"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.ExamMasterEvent" invoke="getExamOrExamList"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>	    
+    </request-map>
+
+
 <!--create topic-->
     <request-map uri="CreateTopicMaster">
     	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.CreateAndUpdateForTopicMasterAndExamTopicMapping" invoke="createTopicMaster"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.TopicEvent" invoke="createTopicMaster"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
     <!--view topic-->
     <request-map uri="GetTopicMaster">
     	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.GetTopicMaster" invoke="getTopicMaster"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.TopicEvent" invoke="getTopicMaster"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
     
-    <request-map uri="ExamTopicMapping">
+    <request-map uri="TopicsList">
     	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.ExamTopicMapping" invoke="examTopic"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.TopicEvent" invoke="topicList"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
     <!--update topic-->
     <request-map uri="EditTopicMaster">
     	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.EditTopicMaster" invoke="editTopicMaster"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.TopicEvent" invoke="editTopicMaster"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
     <!--delete topic-->
     <request-map uri="DeleteTopicMaster">
     	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.DeleteTopic" invoke="deleteTopic"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.TopicEvent" invoke="deleteTopic"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
@@ -178,12 +191,19 @@ under the License.
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
 
-
+    <!--update exam-->
+    
+	<request-map uri="user-exam-mapping">
+	    <security https="true" auth="false"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="userExamMapping"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>
+    </request-map>
     <!--PartyRelationShip  Request Mappings -->
     
      <request-map uri="get-users">
 	    <security https="true" auth="false"/>
-	    <event type="java" path="com.vastpro.onlineexamapplication.event.GetUsersOfAdminEvent" invoke="getUsersOfAdmin"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="getUsersOfAdmin"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>

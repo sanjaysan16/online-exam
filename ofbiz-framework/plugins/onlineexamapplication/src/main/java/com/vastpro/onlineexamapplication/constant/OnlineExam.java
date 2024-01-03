@@ -59,5 +59,13 @@ public interface OnlineExam {
 	String PERFORMANCE_ID = "performanceId";
 	String ATTEMPT_NUMBER = "attemptNumber";
 
-
+	//USEREXAMMAPPING 
+	String ALLOWED_ATTEMPTS="1";
+	String NO_OF_ATTEMPTS="0";
+	String LAST_PERFORMANCE_DATE="2024-01-03 22:22:00.0";
+	String TIMEOUT_DAYS="30";
+	String PASSWORD_CHANGES_AUTO="Y";
+	String CAN_SPLIT_EXAMS="Y";
+	String CAN_SEE_DETAILED_RESULTS="Y";
+	String MAX_SPLIT_ATTEMPTS="0";
 }

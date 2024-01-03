@@ -24,27 +24,5 @@
             <key-map field-name="ofbizDemoTypeId"/>
         </relation>
     </entity>
-    <entity entity-name="sanjayben" package-name="org.apache.ofbiz.ofbizdemo">
-    <field name="firstname" type="name"></field>
-    <field name="lastname" type="name"></field>
-    <field name="comments" type="comment"></field>
-    <prim-key field="firstname"/>
-    </entity>
-    <entity entity-name="sanriddle" package-name="org.apache.ofbiz.ofbizdemo">
-    <field name="name" type="name"></field>
-    <field name="email" type="email"></field>
-    <field name="id" type="id"></field>
-    <prim-key field="name"/>
-    </entity>
-
-    <entity entity-name="sanjay" package-name="org.apache.ofbiz.ofbizdemo">
-    <field name="name" type="name"></field>
-    <field name="job" type="name"></field>
-    <field name="rollnum" type="id"></field>
-    <prim-key field="rollnum"/>
-     <relation type="one" fk-name="ODEM_OD_TYPE_ID" rel-entity-name="sanriddle">
-            <key-map field-name="name"/>
-        </relation>
-    </entity>
-   
+ 
 </entitymodel>
