@@ -282,7 +282,7 @@ setHasError(false)
          }
     }      
     else {
-      const createExamFetch=await  fetch("https://localhost:8443/onlineexamapplication/control/add-exam", {
+      const createExamFetch=await fetch("https://localhost:8443/onlineexamapplication/control/create-exam", {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(dataObject),

@@ -15,7 +15,7 @@ const ExamDashBord = () => {
 
 
 function getExams(){
-fetch(`https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list`)
+fetch(`https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list`,{credentials:"include"})
 .then(res=>res.json())
 .then(data=>{
   setexamList(data.Exam_List);

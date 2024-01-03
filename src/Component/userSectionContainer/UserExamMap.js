@@ -6,27 +6,23 @@ const UserExamMap = () => {
     const [examList, setExamList,refExamList] = useStateRef("");
     const [hasError,setHasError,hasErrorRef]=useStateRef(false);
     const location = useLocation();
-    console.log(location)
     const gender = location.state.user.gender;
-    
+
     useEffect(() => {
-       
+
         getExams();
     }, []);
 
     const getExams = async () => {
         const examFetch = await fetch('https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list',{ credentials: "include" });
         const examListJsonData = await examFetch.json();
-        
-        console.log("insideEffect",examListJsonData)
-
         setExamList(examListJsonData.Exam_List);
     }
 
     
     //validation for
    const chooseExamValidation=(userExamMapping)=>{
-        if(userExamMapping.length===0){
+        if(userExamMapping.length<=1){
             document.getElementById('choose-exam-error').classList.remove('d-none')
             document.getElementById('choose-exam-error').classList.add('d-block')
             document.getElementById('choose-exam-error').innerHTML="*please choose the exam"  
@@ -39,7 +35,7 @@ const UserExamMap = () => {
            
      }
 
-    const checkboxOnSubmit=(e)=>{
+    const chooseExamOnSubmit=(e)=>{
         setHasError(false);
         e.preventDefault();
         
@@ -47,16 +43,25 @@ const UserExamMap = () => {
         var chooseExamObject=Object.fromEntries(chooseExamForm.entries());
          
        var userExamMapping =Object.entries(chooseExamObject);       
-          chooseExamValidation(userExamMapping);
-          var userPartyId=[];
-          userPartyId.push("userPartyId",location.state.user.partyId);
-          userExamMapping.push(userPartyId)
-          console.log(userExamMapping)
-     
+          chooseExamValidation(userExamMapping); 
+
+         const chooseExamAsync =async()=>{
+            const chooseExamFetch = await fetch('https://localhost:8443/onlineexamapplication/control/user-exam-mapping',{
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify(chooseExamObject),
+                headers: {
+                  'Content-Type': "application/json",
+                  'Accept': "application/json"
+                }
+                });
+            const examListJsonData = await chooseExamFetch.json();
+            console.log("examListJsonData",examListJsonData)
+         }
+        if(userExamMapping.length>1){
+            chooseExamAsync();
+        }     
     }
-    
-    console.log("uppercase",gender.toUpperCase())
-   
    
     return (
         <div className='justify-content-sm-evenly py-3 px-2'>
@@ -86,7 +91,7 @@ const UserExamMap = () => {
                         <p className='pt-0 px-2 m-0' style={{ "color": "#808B96" }}>Note : Please click on the arrow botton and choose exam for your user.</p>
                         <p className='pt-0 px-2 text-danger d-none m-0' id='choose-exam-error'></p>
 
-                        <form onSubmit={checkboxOnSubmit}>
+                        <form onSubmit={chooseExamOnSubmit}>
                             <div className='accordion pt-0 px-2' id='accordion-exam' >
 
                                 <div className='accordion-item' style={{ "maxWidth": "100%" }}>
@@ -105,6 +110,7 @@ const UserExamMap = () => {
                                                 return (
                                                     <div className='px-5'>
                                                         <input type='checkbox' name={`choose-exam-${index}`} value={exam.examId}/> <text>{exam.examName}</text>
+                                                        <input type='hidden' name="partyIdOfUser" value={location.state.userLogin.partyId}/>
                                                     </div>
 
                                                 )
