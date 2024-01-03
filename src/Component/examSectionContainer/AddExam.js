@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 import useStateRef from "react-usestateref";
-import {  useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { port, protocol } from "../fetchConst";
 
 
-const AddExam=() =>{
+const AddExam = () => {
 
-  const [hasError, setHasError,refHasError] = useStateRef(false);
+  const [hasError, setHasError, refHasError] = useStateRef(false);
+
+  const uri = `${protocol}://${window.location.hostname}:${port}`;
+
 
   const [examName, setExamName] = useState('');
   const [description, setDescription] = useState('');
@@ -32,15 +36,17 @@ const AddExam=() =>{
     console.log(url);
     if (url) {
 
+      console.log(examId);
+
       examFetch();
 
     }
-    
+
   }, []);
 
 
   const examFetch = async () => {
-    const examFetchFunc = await fetch('https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list', {
+    const examFetchFunc = await fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`, {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({ examId: examId }),
@@ -63,39 +69,39 @@ const AddExam=() =>{
     setNegativeMarkValue(examFetchResult.negativeMarkValue)
     setQuestionsRandomized(examFetchResult.questionsRandomized)
     setAnswerMust(examFetchResult.answersMust)
-    
+
 
   }
- 
+
 
 
   function validation(key, value) {
     var result = value;
-   
+
     switch (key) {
-     
+
       case "examName":
         console.log(result);
-        if(!result){
+        if (!result) {
           document.getElementById(key + "_error").classList.remove("d-none");
           document.getElementById(key + "_error").classList.add("d-block");
           document.getElementById(key + "_error").innerHTML =
             "*please enter the examName";
-            setHasError(true);
-        }else{
-        if (result.match(/^[a-z\s*A-z\s*0-9|s*]+$/g)){
-          document.getElementById(key + "_error").classList.remove("d-block");
-          document.getElementById(key + "_error").classList.add("d-none");
-          document.getElementById(key + "_error").innerHTML = "";
-          
-        }else{
-            document.getElementById(key + "_error").classList.remove("d-none");
-          document.getElementById(key + "_error").classList.add("d-block");
-          document.getElementById(key + "_error").innerHTML =
-          "*special characters not alloewd";
           setHasError(true);
+        } else {
+          if (result.match(/^[a-z\s*A-z\s*0-9|s*]+$/g)) {
+            document.getElementById(key + "_error").classList.remove("d-block");
+            document.getElementById(key + "_error").classList.add("d-none");
+            document.getElementById(key + "_error").innerHTML = "";
+
+          } else {
+            document.getElementById(key + "_error").classList.remove("d-none");
+            document.getElementById(key + "_error").classList.add("d-block");
+            document.getElementById(key + "_error").innerHTML =
+              "*special characters not alloewd";
+            setHasError(true);
+          }
         }
-      }
         break;
       case "description":
         document.getElementById(key + "_error").classList.remove("d-block");
@@ -107,7 +113,7 @@ const AddExam=() =>{
           document.getElementById(key + "_error").classList.add("d-block");
           document.getElementById(key + "_error").innerHTML =
             "*please enter the description";
-          
+
         }
         break;
       case "creationDate":
@@ -120,7 +126,7 @@ const AddExam=() =>{
           document.getElementById(key + "_error").classList.add("d-block");
           document.getElementById(key + "_error").innerHTML =
             "*please enter the creationdate";
-          
+
         }
         break;
       case "expirationDate":
@@ -224,11 +230,11 @@ const AddExam=() =>{
   }
   // validation end
 
-  const navigate =useNavigate();
+  const navigate = useNavigate();
   //onclick event......
   const examFormValidate = (e) => {
     e.preventDefault();
-setHasError(false)
+    setHasError(false)
 
     console.log("validate event called");
     const data = new FormData(e.target);
@@ -241,91 +247,95 @@ setHasError(false)
 
     });
 
-    console.log(hasError+"...haserror")
-    console.log(refHasError+"..ref")
-    console.log(refHasError.current+"..........current")
+    console.log(hasError + "...haserror")
+    console.log(refHasError + "..ref")
+    console.log(refHasError.current + "..........current")
 
-    if(!refHasError.current){
-     const updateExamFunction=async()=>{
+    if (!refHasError.current) {
       if (url) {
         console.log("thi is...............................")
-         dataObject.examId = examId;
-        console.log("dataObject---dataObject",dataObject)
-          const updateExamFetch=await  fetch("https://localhost:8443/onlineexamapplication/control/update-exam", {
-            method: "POST",
-            credentials: "include",
-            body: JSON.stringify(dataObject),
-            headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json"
-            },
-     });
-           const updateExamFetchResult=await updateExamFetch.json();
-           if(updateExamFetchResult.result=="success"){
-            Swal.fire({
-              position: "top-center",
-              icon: "success",
-              title: "Exam Updated SuccessFully",
-              showConfirmButton: false,
-              timer: 1500
-            })
-          }else{
-            Swal.fire({
-              position: "top-center",
-              icon: value.result,
-              title: value.errMsg,
-              showConfirmButton: false,
-              timer: 1500
-            })
-            navigate('/view-exam')   
-            window.location.reload()
-         }
-    }      
-    else {
-      const createExamFetch=await  fetch("https://localhost:8443/onlineexamapplication/control/add-exam", {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(dataObject),
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-     });
-     const createExamFetchResult=await createExamFetch.json(); 
-          if(createExamFetchResult.result=="success"){
-            Swal.fire({
-              position: "top-center",
-              icon: "success",
-              title: "Exam Added SuccessFully",
-              showConfirmButton: false,
-              timer: 1500
-            });
-            setTimeout(function(){
-              window.location.reload();
-            },2000)
-          }else if(createExamFetchResult.result=="error"){
-            Swal.fire({
-              position: "top-center",
-              icon: "Error",
-              title: value.errMsg,
-              showConfirmButton: false,
-              timer: 1500
-            });
-          }
-         }
-         
-    }
-    updateExamFunction();
-  }
+        dataObject.examId = examId;
+        console.log("dataObject---dataObject", dataObject)
+        fetch(`${uri}/onlineexamapplication/control/update-exam`, {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify(dataObject),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+        }).then(response => response.json())
+          .then(value => {
+            if (value.result == "success") {
+              Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: "Exam Updated SuccessFully",
+                showConfirmButton: false,
+                timer: 1500
+              });
 
-    
-};
+
+            } else {
+              Swal.fire({
+                position: "top-center",
+                icon: value.result,
+                title: value.errMsg,
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          })
+
+        navigate('/view-exam')
+        window.location.reload()
+
+      }
+      else {
+        fetch(`${uri}/onlineexamapplication/control/addExam`, {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify(dataObject),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+        }).then(response => response.json())
+          .then(value => {
+            console.log(value)
+            if (value.result == "success") {
+              Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: "Exam Added SuccessFully",
+                showConfirmButton: false,
+                timer: 1500
+              });
+              setTimeout(function () {
+                window.location.reload();
+              }, 2000)
+            } else if (value.result == "error") {
+              Swal.fire({
+                position: "top-center",
+                icon: "Error",
+                title: value.errMsg,
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      }
+    }
+
+
+  };
 
   //onclick event end.......
   const value = "addExam";
   return (
     <>
-     
+
       <div className="container pb-5">
         <div className="row pb-5">
           <div className="col-sm-7 offset-md-3 mt-5">
@@ -349,84 +359,84 @@ setHasError(false)
                     <p id="examName_error" className="d-none text-danger"></p>
                   </div>
 
-                 
-
-                
-                    <div className="">
-                      <div className="form-group">
-                        <label for="description">Description</label>
-                        <textarea
-                          type="text"
-                          className="form-control"
-                          id="description"
-                          placeholder="Write ur description"
-                          name="description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                        ></textarea>
-                        <p
-                          id="description_error"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-                    </div>
 
 
+
+                  <div className="">
                     <div className="form-group">
-                      <div className=" ">
-                        <label for="duration">Duration</label>
-                        <input
-                          type="text"
-                          id="duration"
-                          className="form-control"
-                          placeholder="minutes"
-                          name="durationMinutes"
-                          min='0'
-                          value={durationMinutes}
-                          onChange={(e) => setDurationMinutes(e.target.value)}
-                        ></input>
-                        <p
-                          id="durationMinutes_error"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-                    </div>
-                  
-                 <div className="row">
-                  <div className="col-sm-6 ">
-                    <div className="form-group">
-                      <label for="creationdate">Creation Date</label>
-                      <input
-                        type="datetime-local"
+                      <label for="description">Description</label>
+                      <textarea
+                        type="text"
                         className="form-control"
-                        id="creationdate"
-                        name="creationDate"
-                        value={creationdate}
-                        onChange={(e) => setCreationDate(e.target.value)}
-                      ></input>
+                        id="description"
+                        placeholder="Write ur description"
+                        name="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      ></textarea>
                       <p
-                        id="creationDate_error"
+                        id="description_error"
                         className="d-none text-danger"
                       ></p>
                     </div>
+                  </div>
+
+
+                  <div className="form-group">
+                    <div className=" ">
+                      <label for="duration">Duration</label>
+                      <input
+                        type="text"
+                        id="duration"
+                        className="form-control"
+                        placeholder="minutes"
+                        name="durationMinutes"
+                        min='0'
+                        value={durationMinutes}
+                        onChange={(e) => setDurationMinutes(e.target.value)}
+                      ></input>
+                      <p
+                        id="durationMinutes_error"
+                        className="d-none text-danger"
+                      ></p>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-sm-6 ">
+                      <div className="form-group">
+                        <label for="creationdate">Creation Date</label>
+                        <input
+                          type="datetime-local"
+                          className="form-control"
+                          id="creationdate"
+                          name="creationDate"
+                          value={creationdate}
+                          onChange={(e) => setCreationDate(e.target.value)}
+                        ></input>
+                        <p
+                          id="creationDate_error"
+                          className="d-none text-danger"
+                        ></p>
+                      </div>
                     </div>
 
                     <div className="col-sm-5   offset-md-1">
-                    <div className="form-group">
-                      <label for="expirationdate">Expiration Date</label>
-                      <input
-                        type="datetime-local"
-                        className="form-control"
-                        id="expirationdate"
-                        name="expirationDate"
-                        value={expirationdate}
-                        onChange={(e) => { setExpirationDate(e.target.value) }}
-                      ></input>
-                      <p
-                        id="expirationDate_error"
-                        className="d-none text-danger"
-                      ></p>
-                    </div>
+                      <div className="form-group">
+                        <label for="expirationdate">Expiration Date</label>
+                        <input
+                          type="datetime-local"
+                          className="form-control"
+                          id="expirationdate"
+                          name="expirationDate"
+                          value={expirationdate}
+                          onChange={(e) => { setExpirationDate(e.target.value) }}
+                        ></input>
+                        <p
+                          id="expirationDate_error"
+                          className="d-none text-danger"
+                        ></p>
+                      </div>
                     </div>
                   </div>
 
@@ -556,7 +566,7 @@ setHasError(false)
                   </div>
 
                   <div className="text-center mt-2">
-                    <button  type="submit" className="btn btn-success">{url == false ? <text>Add Exam</text> : <text>Update Exam</text>}</button>
+                    <button type="submit" className="btn btn-success">{url == false ? <text>Add Exam</text> : <text>Update Exam</text>}</button>
                   </div>
                 </form>
               </div>

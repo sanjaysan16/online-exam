@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import useStateRef from "react-usestateref";
 import Swal from "sweetalert2";
+import { port, protocol } from "../fetchConst";
 const ViewQuestion = () => {
+  const uri = `${protocol}://${window.location.hostname}:${port}`;
   const [listOfQuestions, setListQuestions, refListQuestions] = useStateRef();
-  const[state,setState]=useState(false)
+  const [state, setState] = useState(false)
 
-  const queryParamByTopicId=window.location.search;
-  const myKeyValuePair=new URLSearchParams(queryParamByTopicId);
-  const topicId=myKeyValuePair.get('topicId');
+  const queryParamByTopicId = window.location.search;
+  const myKeyValuePair = new URLSearchParams(queryParamByTopicId);
+  const topicId = myKeyValuePair.get('topicId');
   useEffect(() => {
     fetchCall();
   }, []);
   // get question list fetchcall
   function fetchCall() {
-    fetch(`https://localhost:8443/onlineexamapplication/control/view-questions?topicId=${topicId}`, { credentials: "include" })
+    fetch(`${uri}/onlineexamapplication/control/viewQuestions?topicId=${topicId}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         var questionList = data.questionList;
@@ -47,7 +49,7 @@ const ViewQuestion = () => {
       .then((result) => {
         if (result.isConfirmed) {
           fetch(
-            `https://localhost:8443/onlineexamapplication/control/delete-question?questionId=${questionId}`, { credentials: "include" }
+            `${uri}/onlineexamapplication/control/delete-question?questionId=${questionId}`, { credentials: "include" }
           )
             .then((res) => res.json())
             .then((data) => {
@@ -57,13 +59,13 @@ const ViewQuestion = () => {
                   title: "Deleted!",
                   text: "Your file has been deleted.",
                   icon: "success",
-                  
+
                 });
-               setTimeout(function(){
-                window.location.reload();
-               },2000);
-               }
-              
+                setTimeout(function () {
+                  window.location.reload();
+                }, 2000);
+              }
+
             })
             .catch(error => console.error('Error:', error));
         } else if (
@@ -83,7 +85,7 @@ const ViewQuestion = () => {
     <>
       <div className="container ">
         <div className="card mt-5">
-          <div className="card-header text-center text-light custom-card-header" style={{ backgroundColor: '$indigo-900'}}>
+          <div className="card-header text-center text-light custom-card-header" style={{ backgroundColor: '$indigo-900' }}>
             <h2> Question List</h2>
           </div>
           <div className="cardbody mt-1">

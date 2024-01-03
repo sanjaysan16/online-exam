@@ -1,26 +1,34 @@
+
+import { port, protocol } from "../fetchConst";
 import Exam from "./Exam";
 
 import { useState, useEffect } from "react";
 
 const ExamDashBord = () => {
-  const [examList, setexamList] = useState([]);
+  const uri = `${protocol}://${window.location.hostname}:${port}`;
+
+  const [examList,setexamList]=useState([]);
+ 
+  useEffect(()=>{     
+          
+          getExams();
+  },[]);
 
   useEffect(() => {
     getExams();
   }, []);
 
-  function getExams() {
-    fetch(
-      `https://localhost:8443/onlineexamapplication/control/get-exam-or-exam-list`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setexamList(data.Exam_List);
-      })
-      .catch((error) => console.error("Error:", error));
-  }
-  console.log(examList.length + "this is length");
-  const value = "home";
+
+function getExams(){
+fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`)
+.then(res=>res.json())
+.then(data=>{
+  console.log(data);
+  setexamList(data.Exam_List);
+}).catch(error => console.error('Error:', error))
+}
+  console.log(examList.length+"this is length");
+  const value="home";
   return (
     <div className="pb-5">
       <div className="container-fluid py-5 text-center overflow-hidden">

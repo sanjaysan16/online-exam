@@ -1,9 +1,12 @@
 import useStateRef from "react-usestateref";
 import { useState } from "react";
+import { port, protocol } from "../fetchConst";
 
 const AddTopic = (props) => {
   
     const [hasErrorRef,setHasError,refHasError]=useStateRef(false)
+
+    const uri = `${protocol}://${window.location.hostname}:${port}`;
 
 
     const validatingTopics=(key,value)=>{
@@ -67,7 +70,7 @@ const AddTopic = (props) => {
 
      const fetchData=async()=>{
         console.log("in fetch")
-       const res=await fetch("https://localhost:8443/onlineexamapplication/control/CreateTopicMaster",{
+       const res=await fetch(`${uri}/onlineexamapplication/control/CreateTopicMaster`,{
 
         method:'POST',
         credentials:'include',
