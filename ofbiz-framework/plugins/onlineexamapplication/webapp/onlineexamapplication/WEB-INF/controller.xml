@@ -76,7 +76,8 @@ under the License.
     
      <request-map uri="create-exam">
 	    <security https="true" auth="false"/>
-	    <event type="java" path="com.vastpro.onlineexamapplication.event.ExamMasterEvent" invoke="createExam"/>	    <response name="success" type="request" value="json"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.ExamMasterEvent" invoke="createExam"/>	 
+	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="view" value="main"/>
     </request-map>
     
