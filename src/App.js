@@ -33,6 +33,7 @@ function App() {
           
           <Route path='/' element={<Welcome />} />
           <Route path='/admin-view' element={<AdminView/>}/>
+          <Route path='/dash-bord' element={<DashBord/>}/>
           <Route path='/add-exam' element={<AddExam/>} />
           <Route path='/add-topic' element={<AddTopic/>} />
           <Route path='/view-topic' element={<TopicsDisplay/>}/>
