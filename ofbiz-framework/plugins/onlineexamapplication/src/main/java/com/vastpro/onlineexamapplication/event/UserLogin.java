@@ -18,7 +18,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 
 import com.vastpro.onlineexamapplication.constant.OnlineExam;
-import com.vastpro.onlineexamapplication.forms.HibernateValidator;
+import com.vastpro.onlineexamapplication.forms.LoginValidator;
 import com.vastpro.onlineexamapplication.forms.check.LoginCheck;
 import com.vastpro.onlineexamapplication.helper.HibernateHelper;
 
@@ -56,10 +56,10 @@ public class UserLogin{
 					if(password.equals(backEndPassword)) {
 						
 						Map<String, Object> userLoginMap = UtilMisc.toMap("username", username, "password", password);
-						HibernateValidator fieldsValidator = HibernateHelper.populateBeanFromMap(userLoginMap,
-								HibernateValidator.class);
+						LoginValidator fieldsValidator = HibernateHelper.populateBeanFromMap(userLoginMap,
+								LoginValidator.class);
 
-						Set<ConstraintViolation<HibernateValidator>> errors = HibernateHelper.checkValidationErrors(fieldsValidator,
+						Set<ConstraintViolation<LoginValidator>> errors = HibernateHelper.checkValidationErrors(fieldsValidator,
 								LoginCheck.class);
 
 						boolean hasFormErrors = HibernateHelper.validateFormSubmission(delegator, errors, request, locale,

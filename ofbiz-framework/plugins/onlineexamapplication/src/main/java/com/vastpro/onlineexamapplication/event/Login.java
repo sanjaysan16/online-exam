@@ -40,9 +40,9 @@ public class Login {
 					String partyId=(String) userLogin.get("partyId");
 					if(UtilValidate.isNotEmpty(partyId)) {
 						GenericValue partyRole=EntityQuery.use(delegator).from("PartyRole").where("partyId",partyId).cache().queryOne();
-						String rollOfUser=(String) partyRole.get("roleTypeId");
-						if(UtilValidate.isNotEmpty(rollOfUser)) {
-							if(rollOfUser.equalsIgnoreCase("adminExam")) {
+						String roleOfUser=(String) partyRole.get("roleTypeId");
+						if(UtilValidate.isNotEmpty(roleOfUser)) {
+							if(roleOfUser.equalsIgnoreCase("adminExam")) {
 								 flag=true;
 							}else {
 								flag=false;
@@ -55,9 +55,6 @@ public class Login {
 							request.setAttribute(" _ERROR_MESSAGE_", errMsg);
 							return OnlineExam.ERROR;
 						}
-						
-						
-						
 						
 					}else {
 						String errMsg="User is not found";

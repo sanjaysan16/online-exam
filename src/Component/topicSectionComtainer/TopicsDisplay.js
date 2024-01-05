@@ -63,6 +63,7 @@ const TopicsDisplay = () => {
         const responsePercentage = data.TopicDetails.percentage;
         const responseTopicPassPercentage =
           data.TopicDetails.topicPassPercentage;
+        console.log(responseTopicPassPercentage)
         const responseTopicName = data.TopicName.topicName;
         setPercentage(responsePercentage);
         setPassPercentage(responseTopicPassPercentage);
@@ -104,6 +105,7 @@ const TopicsDisplay = () => {
     setPassPercentage("");
     setPercentage("");
     setTopicList("");
+    
   }
 
   return (
@@ -161,6 +163,7 @@ const TopicsDisplay = () => {
                     </button>
                     <button
                       className="btn btn-outline-info m-1"
+                      
                       title="edit topic"
                       style={{ float: "right" }}
                       data-bs-toggle="modal"
