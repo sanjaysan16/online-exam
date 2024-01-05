@@ -1,12 +1,34 @@
 import useStateRef from "react-usestateref";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { port, protocol } from "../fetchConst";
+import WarningModal from "../adminSectionContainer/WarningModal";
 
 const AddTopic = (props) => {
   
     const [hasErrorRef,setHasError,refHasError]=useStateRef(false)
+    const[isAdmin,setIsAdmin]=useState(false)
+    const[message,setMessage]=useState('')
 
     const uri = `${protocol}://${window.location.hostname}:${port}`;
+
+    useEffect(()=>{
+      adminOrUserCheck();
+    },[])
+
+    const adminOrUserCheck = () => {
+      fetch(`${uri}/onlineexamapplication/control/check-admin-or-user`, {
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.errMsg == "notAdmin") {
+            setIsAdmin(true);
+            setMessage(data.message);
+            document.getElementById("topicAdminCheck").click();
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    };
 
 
     const validatingTopics=(key,value)=>{
@@ -98,7 +120,14 @@ const AddTopic = (props) => {
     }
   return (
     <>
+     <p
+        id="topicAdminCheck"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      ></p>
+      <WarningModal message={message} />
     
+    {isAdmin ? (<></>):(
     <div>
       <div className="modal fade" id="addTopic"  tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
@@ -142,6 +171,7 @@ const AddTopic = (props) => {
         </div>
       </div>
     </div>
+    )}
      </>
 
   )
