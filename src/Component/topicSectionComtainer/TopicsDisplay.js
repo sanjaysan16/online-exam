@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import useStateRef from "react-usestateref";
 import { port, protocol } from "../fetchConst";
+import WarningModal from "../adminSectionContainer/WarningModal";
 
 const TopicsDisplay = () => {
 
@@ -13,6 +14,8 @@ const TopicsDisplay = () => {
   const [percentage, setPercentage] = useState();
   const [passPercentage, setPassPercentage] = useState();
   const [name, setName] = useState();
+  const[isAdmin,setIsAdmin]=useState(false)
+  const[message,setMessage]=useState('')
 
   const uri = `${protocol}://${window.location.hostname}:${port}`;
 
@@ -28,7 +31,22 @@ const TopicsDisplay = () => {
     if (url) {
       displayTopic();
     }
+    adminOrUserCheck();
   }, []);
+  const adminOrUserCheck = () => {
+    fetch(`${uri}/onlineexamapplication/control/check-admin-or-user`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.errMsg == "notAdmin") {
+          setIsAdmin(true);
+          setMessage(data.message);
+          document.getElementById("topicDisplayAdminCheck").click();
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   const displayTopic = () => {
     fetch(
@@ -110,6 +128,16 @@ const TopicsDisplay = () => {
 
   return (
     <>
+
+     <p
+        id="examdashbordcheck"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      ></p>
+      <WarningModal message={message} />
+
+      {isAdmin ? (<></>):(
+        <>
       <AddTopic
         topics={topicList}
         percentage={percentage}
@@ -189,7 +217,8 @@ const TopicsDisplay = () => {
             }) : <h1>No topics Available</h1>}
         </tbody>
       </table>
-
+      </>
+     )}
     </>
   );
 };

@@ -1,11 +1,14 @@
 import useStateRef from "react-usestateref";
 import { useEffect, useState } from "react";
 import { port, protocol } from "../fetchConst";
+import WarningModal from "../adminSectionContainer/WarningModal";
 
 const AddTopic = (props) => {
   console.log(props.name)
   console.log(props.passPercentage)
   console.log(props.percentage)
+  const[isAdmin,setIsAdmin]=useState(false)
+    const[message,setMessage]=useState('')
   const [name, setName, refName] = useStateRef()
   const [percentage, setPercentage, refPercentage] = useStateRef()
   const [passPercentage, setPassPercentage, refPassPercentage] = useStateRef()
@@ -23,6 +26,25 @@ const AddTopic = (props) => {
     setPassPercentage(props.passPercentage)
     console.log(refPassPercentage.current)
   }, [props])
+
+    useEffect(()=>{
+      adminOrUserCheck();
+    },[])
+
+    const adminOrUserCheck = () => {
+      fetch(`${uri}/onlineexamapplication/control/check-admin-or-user`, {
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.errMsg == "notAdmin") {
+            setIsAdmin(true);
+            setMessage(data.message);
+            document.getElementById("topicAdminCheck").click();
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    };
 
 
 
@@ -139,10 +161,24 @@ const AddTopic = (props) => {
   return (
     <>
 
-      <div>
-        <div className="modal fade" id="addTopic" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
+      
+
+     <p
+        id="topicAdminCheck"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      ></p>
+      <WarningModal message={message} />
+    
+    {isAdmin ? (<></>):(
+      <>
+    <div>
+      <div className="modal fade" id="addTopic"  tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+           
+             
+              <form onSubmit={onSubmit}>
 
               <div className='modal-header bg-secondary '>
                 <p className='modal-title text-light fs-2'>Add Topic</p>
@@ -155,9 +191,7 @@ const AddTopic = (props) => {
                   onClick={() => refreshModal()}
                 ></button>
               </div>
-              <form onSubmit={onSubmit}>
-
-
+              
                 <div className='modal-body col-sm-10 offset-md-1'>
                   <p id="error_user1" className="d-none mb-0 text-danger"></p>
 
@@ -189,6 +223,9 @@ const AddTopic = (props) => {
         </div>
       </div>
     </>
+   
+    )}
+     </>
 
   )
 }

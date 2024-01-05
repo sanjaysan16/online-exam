@@ -21,35 +21,35 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 import com.vastpro.onlineexamapplication.constant.OnlineExam;
 
-
-
 public class ExamMasterEvent {
 	public static final String module = ExamMasterEvent.class.getName();
 
-     /**
-      * addExamEvent
-      * 
-      * @param request
-      * @param response
-      * @return
-      */
+	/**
+	 * addExamEvent
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	public static String createExam(HttpServletRequest request, HttpServletResponse response) {
+
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
 		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
-		
+
 		String result = "";
-		
+
 		GenericValue examCheck;
 
 		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String examName = (String) request.getAttribute(OnlineExam.EXAM_NAME);
-		
-       // CHECKING EXAM IS THERE OR NOT
+
+		// CHECKING EXAM IS THERE OR NOT
 		try {
-			examCheck = EntityQuery.use(delegator).from(OnlineExam.Exam_Master).where(OnlineExam.EXAM_NAME, examName).cache().queryFirst();
-            
+			examCheck = EntityQuery.use(delegator).from(OnlineExam.Exam_Master).where(OnlineExam.EXAM_NAME, examName)
+					.cache().queryFirst();
+
 			if (UtilValidate.isEmpty(examCheck)) {
 
 				String description = (String) request.getAttribute(OnlineExam.DESCRIPTION);
@@ -70,14 +70,16 @@ public class ExamMasterEvent {
 				String enableNegativeMark = (String) request.getAttribute(OnlineExam.ENABLE_NEGATIVE_MARK);
 				String negativeMarkValue = (String) request.getAttribute(OnlineExam.NEGATIVE_MARK_VALUE);
 
-				//CALLING SERVICE TO CREATE EXAM
+				// CALLING SERVICE TO CREATE EXAM
 				try {
 					dispatcher.runSync("createExamService",
-							UtilMisc.toMap(OnlineExam.EXAM_NAME, examName, OnlineExam.DESCRIPTION, description, OnlineExam.CREATION_DATE,
-									creationDate, OnlineExam.EXPIRATION_DATE, expirationDate, OnlineExam.NO_OF_QUESTIONS, noOfQuestions,
-									OnlineExam.DURATION_MINUTES, durationMinutes,OnlineExam.PASS_PERCENTAGE, passPercentage,
-									OnlineExam.QUESTIONS_RANDOMIZED, questionsRandomized,OnlineExam.ANSWERS_MUST, answersMust,
-									OnlineExam.ENABLE_NEGATIVE_MARK, enableNegativeMark,OnlineExam.NEGATIVE_MARK_VALUE, negativeMarkValue));
+							UtilMisc.toMap(OnlineExam.EXAM_NAME, examName, OnlineExam.DESCRIPTION, description,
+									OnlineExam.CREATION_DATE, creationDate, OnlineExam.EXPIRATION_DATE, expirationDate,
+									OnlineExam.NO_OF_QUESTIONS, noOfQuestions, OnlineExam.DURATION_MINUTES,
+									durationMinutes, OnlineExam.PASS_PERCENTAGE, passPercentage,
+									OnlineExam.QUESTIONS_RANDOMIZED, questionsRandomized, OnlineExam.ANSWERS_MUST,
+									answersMust, OnlineExam.ENABLE_NEGATIVE_MARK, enableNegativeMark,
+									OnlineExam.NEGATIVE_MARK_VALUE, negativeMarkValue));
 				} catch (GenericServiceException e) {
 					String errMsg = "Unable to create new records in OfbizDemo entity: " + e.toString();
 					request.setAttribute("ERROR_MESSAGE", errMsg);
@@ -97,17 +99,17 @@ public class ExamMasterEvent {
 			}
 
 		} catch (GenericEntityException e1) {
-			
+
 			e1.printStackTrace();
 		}
 
-	
 		return OnlineExam.SUCCESS;
 
 	}
-	
+
 	/**
 	 * updateExam
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -118,27 +120,27 @@ public class ExamMasterEvent {
 		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
 		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		 
-		String examId=(String) request.getAttribute(OnlineExam.EXAM_ID);
+
+		String examId = (String) request.getAttribute(OnlineExam.EXAM_ID);
 		String examName = (String) request.getAttribute(OnlineExam.EXAM_NAME);
 
-		if (UtilValidate.isEmpty(examName)||UtilValidate.isEmpty(examId)) {
+		if (UtilValidate.isEmpty(examName) || UtilValidate.isEmpty(examId)) {
 			String errMsg = "examId examName is required fields";
 			request.setAttribute("ERROR_MESSAGE", errMsg);
 			return OnlineExam.ERROR;
 		}
 		String description = (String) request.getAttribute(OnlineExam.DESCRIPTION);
-        String creationDateString=(String) request.getAttribute("creationDate");
-        
-		//creationDateString converting to localtime
-		LocalDateTime creationLocalDateTime=LocalDateTime.parse(creationDateString, inputFormatter);
-		String creationDate=creationLocalDateTime.format(outputFormatter);
-		
-		String expirationDateString=(String)request.getAttribute("expirationDate");
-		//expirationDateString converting to localtime
-		LocalDateTime expirationLocalDateTime=LocalDateTime.parse(expirationDateString, inputFormatter);
-		String expirationDate=expirationLocalDateTime.format(outputFormatter);
-		
+		String creationDateString = (String) request.getAttribute("creationDate");
+
+		// creationDateString converting to localtime
+		LocalDateTime creationLocalDateTime = LocalDateTime.parse(creationDateString, inputFormatter);
+		String creationDate = creationLocalDateTime.format(outputFormatter);
+
+		String expirationDateString = (String) request.getAttribute("expirationDate");
+		// expirationDateString converting to localtime
+		LocalDateTime expirationLocalDateTime = LocalDateTime.parse(expirationDateString, inputFormatter);
+		String expirationDate = expirationLocalDateTime.format(outputFormatter);
+
 		String noOfQuestions = (String) request.getAttribute("noOfQuestions");
 		String durationMinutes = (String) request.getAttribute("durationMinutes");
 		String passPercentage = (String) request.getAttribute("passPercentage");
@@ -153,101 +155,108 @@ public class ExamMasterEvent {
 		System.out.println(negativeMarkValue);
 
 		try {
-			Debug.logInfo(
-					"=======Updating Exam record in event using service updateExam=========",
-					module);
+			Debug.logInfo("=======Updating Exam record in event using service updateExam=========", module);
 			dispatcher.runSync("updateExam",
-					UtilMisc.toMap("examId",examId,"examName", examName, "description", description, "creationDate",
+					UtilMisc.toMap("examId", examId, "examName", examName, "description", description, "creationDate",
 							creationDate, "expirationDate", expirationDate, "noOfQuestions", noOfQuestions,
 							"durationMinutes", durationMinutes, "passPercentage", passPercentage, "questionsRandomized",
 							questionsRandomized, "answersMust", answersMust, "enableNegativeMark", enableNegativeMark,
-							"negativeMarkValue", negativeMarkValue,"userLogin",userLogin));
-		} catch (GenericServiceException e) {	
-			 String errMsg = "Unable to update records in Exam entity: " + e.toString();
-				request.setAttribute("ERROR_MESSAGE", errMsg);
+							"negativeMarkValue", negativeMarkValue, "userLogin", userLogin));
+		} catch (GenericServiceException e) {
+			String errMsg = "Unable to update records in Exam entity: " + e.toString();
+			request.setAttribute("ERROR_MESSAGE", errMsg);
 			return OnlineExam.ERROR;
 		}
 
-        request.setAttribute("EVENT_MESSAGE", "Exam updated succesfully.");
+		request.setAttribute("EVENT_MESSAGE", "Exam updated succesfully.");
 		return OnlineExam.SUCCESS;
 
 	}
 
 	/**
 	 * deleteExam
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	public static String deleteExam(HttpServletRequest request,HttpServletResponse response) {
+	public static String deleteExam(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
-		LocalDispatcher dispatcher= (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
-		GenericValue userLogin= (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
-		
-		String examId= (String)request.getAttribute(OnlineExam.EXAM_ID);
-	
-		if(UtilValidate.isEmpty(examId)){
-			String errMsg="could not find examId as "+examId;
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
+		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
+
+		String examId = (String) request.getAttribute(OnlineExam.EXAM_ID);
+
+		if (UtilValidate.isEmpty(examId)) {
+			String errMsg = "could not find examId as " + examId;
 			request.setAttribute("ERROR", errMsg);
 			return OnlineExam.ERROR;
 		}
-		
+
 		try {
 			try {
-				
-				GenericValue examGv= EntityQuery.use(delegator).from(OnlineExam.Exam_Master).where(OnlineExam.EXAM_ID,examId).cache().queryOne();
-			
-				if(UtilValidate.isNotEmpty(examId)) {
-					List<GenericValue> examTopicMappingListGv= EntityQuery.use(delegator).from(OnlineExam.EXAM_TOPIC_MAPPING_MASTER).where(OnlineExam.EXAM_ID,examId).cache().queryList();
 
-					if(UtilValidate.isNotEmpty(examTopicMappingListGv)) {
-						for(GenericValue examTopicMapping:examTopicMappingListGv) {
-							String topicId=(String)examTopicMapping.get(OnlineExam.TOPIC_ID);
-							List<GenericValue> ListOfQuestions= EntityQuery.use(delegator).from(OnlineExam.Question_Master).where( OnlineExam.TOPIC_ID ,topicId).cache().queryList();
-                            
-						   if(UtilValidate.isNotEmpty(ListOfQuestions)) {
-							   
-							   for(GenericValue question:ListOfQuestions) {
-								   Long questionId=(Long)question.get(OnlineExam.QUESTION_ID);
-									 dispatcher.runSync("DeleteQuestionService", UtilMisc.toMap(OnlineExam.QUESTION_ID,questionId,OnlineExam.USERLOGIN,userLogin));
-							   }
-						   }
-							Map<String,Object> deleteExamTopicMapping= dispatcher.runSync("deleteExamTopicMapping", UtilMisc.toMap(OnlineExam.EXAM_ID,examId,OnlineExam.TOPIC_ID,topicId,OnlineExam.USERLOGIN,userLogin));
-							
-                            
-							 if(ServiceUtil.isSuccess(deleteExamTopicMapping)) {
-									Map<String,Object> deleteTopicMaster= dispatcher.runSync("deleteTopicMaster", UtilMisc.toMap(OnlineExam.TOPIC_ID,topicId,OnlineExam.USERLOGIN,userLogin));
-							 }
-							 else {
-								 request.setAttribute("service_error", "service(deleteTopicMaster) failed");
-								 return OnlineExam.ERROR;
-							 }
+				GenericValue examGv = EntityQuery.use(delegator).from(OnlineExam.Exam_Master)
+						.where(OnlineExam.EXAM_ID, examId).cache().queryOne();
+
+				if (UtilValidate.isNotEmpty(examId)) {
+					List<GenericValue> examTopicMappingListGv = EntityQuery.use(delegator)
+							.from(OnlineExam.EXAM_TOPIC_MAPPING_MASTER).where(OnlineExam.EXAM_ID, examId).cache()
+							.queryList();
+
+					if (UtilValidate.isNotEmpty(examTopicMappingListGv)) {
+						for (GenericValue examTopicMapping : examTopicMappingListGv) {
+							String topicId = (String) examTopicMapping.get(OnlineExam.TOPIC_ID);
+							List<GenericValue> ListOfQuestions = EntityQuery.use(delegator)
+									.from(OnlineExam.Question_Master).where(OnlineExam.TOPIC_ID, topicId).cache()
+									.queryList();
+
+							if (UtilValidate.isNotEmpty(ListOfQuestions)) {
+
+								for (GenericValue question : ListOfQuestions) {
+									Long questionId = (Long) question.get(OnlineExam.QUESTION_ID);
+									dispatcher.runSync("DeleteQuestionService", UtilMisc.toMap(OnlineExam.QUESTION_ID,
+											questionId, OnlineExam.USERLOGIN, userLogin));
+								}
+							}
+							Map<String, Object> deleteExamTopicMapping = dispatcher.runSync("deleteExamTopicMapping",
+									UtilMisc.toMap(OnlineExam.EXAM_ID, examId, OnlineExam.TOPIC_ID, topicId,
+											OnlineExam.USERLOGIN, userLogin));
+
+							if (ServiceUtil.isSuccess(deleteExamTopicMapping)) {
+								Map<String, Object> deleteTopicMaster = dispatcher.runSync("deleteTopicMaster",
+										UtilMisc.toMap(OnlineExam.TOPIC_ID, topicId, OnlineExam.USERLOGIN, userLogin));
+							} else {
+								request.setAttribute("service_error", "service(deleteTopicMaster) failed");
+								return OnlineExam.ERROR;
+							}
 						}
 					}
-					dispatcher.runSync("deleteExam",UtilMisc.toMap(OnlineExam.EXAM_ID,examId,OnlineExam.USERLOGIN,userLogin));
+					dispatcher.runSync("deleteExam",
+							UtilMisc.toMap(OnlineExam.EXAM_ID, examId, OnlineExam.USERLOGIN, userLogin));
 					request.setAttribute("_EVENT_MESSAGE", "Exam deleted succesfully.");
 					return OnlineExam.SUCCESS;
-				}
-				else {
-					String errMsg="unable to find exam from Exam entity";
+				} else {
+					String errMsg = "unable to find exam from Exam entity";
 					request.setAttribute("ERROR", errMsg);
 					return OnlineExam.ERROR;
 				}
 			} catch (GenericEntityException e) {
-				String errMsg="unable to get record from Exam entity"+e.toString();
+				String errMsg = "unable to get record from Exam entity" + e.toString();
 				request.setAttribute("ERROR", errMsg);
 				return OnlineExam.ERROR;
 			}
 		} catch (GenericServiceException e) {
-			String errMsg="unable to delete record from Exam entity"+e.toString();
+			String errMsg = "unable to delete record from Exam entity" + e.toString();
 			request.setAttribute("ERROR", errMsg);
 			return OnlineExam.ERROR;
 		}
-		
+
 	}
-	
+
 	/**
 	 * getExamOrExamList
+	 * 
 	 * @param request
 	 * @param reponse
 	 * @return
@@ -261,7 +270,7 @@ public class ExamMasterEvent {
 			try {
 				Debug.logInfo("==========Geting exam from Exam entity==========", module);
 				exam = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId).cache().queryOne();
-				if(exam==null) {
+				if (exam == null) {
 					String errMsg = "no exam founded from entity Exam";
 					request.setAttribute("ERROR", errMsg);
 					return OnlineExam.ERROR;

@@ -3,6 +3,7 @@ import useStateRef from "react-usestateref";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { port, protocol } from "../fetchConst";
+import WarningModal from "../adminSectionContainer/WarningModal";
 
 
 const UpdateQuestion = () => {
@@ -12,12 +13,28 @@ const UpdateQuestion = () => {
   const [questionType, setQuestionType] = useState('')
   const [hasError, setHasError, refHasError] = useStateRef(false);
 
-
+  const[isAdmin,setIsAdmin]=useState(false)
+  const[message,setMessage]=useState('')
 
   useEffect(() => {
     questionList();
+    adminOrUserCheck();
   }, []);
 
+  const adminOrUserCheck = () => {
+    fetch(`${uri}/onlineexamapplication/control/check-admin-or-user`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.errMsg == "notAdmin") {
+          setIsAdmin(true);
+          setMessage(data.message);
+          document.getElementById("updatequestionadmincheck").click();
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   const questionList = () => {
     fetch(
@@ -224,7 +241,14 @@ const UpdateQuestion = () => {
   }
   return (
     <>
-
+     <p
+        id="updatequestionadmincheck"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      ></p>
+      
+      <WarningModal message={message} />
+    {isAdmin ?(<></>):(
       <div className='container w-100% mt-5 offset-md-0'>
         <div className='row'>
 
@@ -577,7 +601,7 @@ const UpdateQuestion = () => {
         </div>
       </div>
 
-
+        )}
     </>
   );
 };

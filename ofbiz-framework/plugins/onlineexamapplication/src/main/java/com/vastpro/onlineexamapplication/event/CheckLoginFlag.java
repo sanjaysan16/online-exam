@@ -2,6 +2,7 @@ package com.vastpro.onlineexamapplication.event;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
@@ -17,7 +18,7 @@ public class CheckLoginFlag {
 	public static String afterLogin(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator=(Delegator)request.getAttribute(OnlineExam.DELEGATOR);
 		GenericValue userDetails = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
-
+		  HttpSession session = request.getSession();
 		String partyId = OnlineExam.NULL;
 
 		
@@ -25,6 +26,8 @@ public class CheckLoginFlag {
 			partyId = (String) userDetails.get("partyId");
 			isUserlogin = false;
 			request.setAttribute("partyId", partyId);
+		     session.setAttribute("partyId", partyId);
+
 			if(UtilValidate.isNotEmpty(partyId)) {
 				 
 				try {
@@ -50,7 +53,23 @@ public class CheckLoginFlag {
 			
 		}
 		request.setAttribute("isUserlogin", isUserlogin);
-		request.setAttribute("partyId", partyId);
 		return OnlineExam.SUCCESS;
 	}
+	
+	
+//	public static String loginOrNotCheck(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		 boolean signInCheck=Boolean.valueOf(String.valueOf(request.getSession().getAttribute("signInCheck")));
+//		 
+//		 if(!signInCheck) {
+//			 String errMsg="notLogin";
+//			 String message="To Access This Page You Need To Login First";
+//			 request.setAttribute("errMsg", errMsg);
+//			 request.setAttribute("message", message);
+//			 return OnlineExam.ERROR;
+//		 }
+//		 
+//		return OnlineExam.SUCCESS;
+//		
+//	}
 }

@@ -189,7 +189,7 @@ public class TopicEvent {
 		
 		return OnlineExam.SUCCESS;
 	}
-	
+
 	public static String getTopicMaster(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 
@@ -223,9 +223,9 @@ public class TopicEvent {
 		request.setAttribute("result", result);
 		return OnlineExam.ERROR;
 	}
-	
-	
+
 	public static String deleteTopic(HttpServletRequest request, HttpServletResponse response) {
+
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
 		String examId = request.getParameter("examId");
@@ -290,8 +290,9 @@ public class TopicEvent {
 		request.setAttribute("errMsg", errMsg);
 		return OnlineExam.ERROR;
 	}
-	
+
 	public static String topicList(HttpServletRequest request, HttpServletResponse response) {
+	
 
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);

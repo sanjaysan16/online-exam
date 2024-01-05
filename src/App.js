@@ -15,9 +15,11 @@ import Footer from './Component/footerSectionContainer/Footer'
 import ViewQuestion from './Component/questionSectionContainer/ViewQuestion'
 import UpdateQuestion from './Component/questionSectionContainer/UpdateQuestion'
 
-import ViewUsers from './Component/userSectionContainer/ViewUsers'
-import UserExamMap from './Component/userSectionContainer/UserExamMap'
+import ViewUsers from './Component/adminSectionContainer/ViewUsers'
+import UserExamMap from './Component/adminSectionContainer/UserExamMap'
 import AdminView from "./Component/adminSectionContainer/AdminView";
+import UserDashBoard from "./Component/userSectionContainer/UserDashBoard";
+import DashBord from "./Component/DashBordContainerSection/DashBord";
 
 
 
@@ -29,9 +31,10 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-
+          
           <Route path='/' element={<Welcome />} />
           <Route path='/admin-view' element={<AdminView/>}/>
+          <Route path='/dash-bord' element={<DashBord/>}/>
           <Route path='/add-exam' element={<AddExam/>} />
           <Route path='/add-topic' element={<AddTopic/>} />
           <Route path='/view-topic' element={<TopicsDisplay/>}/>
@@ -43,6 +46,7 @@ function App() {
           
           <Route path='/view-user' element={<ViewUsers/>}/>
           <Route path='/user-exam-mapping' element={<UserExamMap/>}/>
+          <Route path='/user-dashboard' element={<UserDashBoard/>}/>
         </Routes>
       </BrowserRouter>
       <Footer />
