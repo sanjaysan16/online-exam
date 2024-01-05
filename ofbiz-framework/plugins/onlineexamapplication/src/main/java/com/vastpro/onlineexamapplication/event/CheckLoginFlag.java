@@ -24,6 +24,7 @@ public class CheckLoginFlag {
 		if (UtilValidate.isNotEmpty(userDetails)) {
 			partyId = (String) userDetails.get("partyId");
 			isUserlogin = false;
+			request.setAttribute("partyId",partyId);
 			if(UtilValidate.isNotEmpty(partyId)) {
 				 
 				try {

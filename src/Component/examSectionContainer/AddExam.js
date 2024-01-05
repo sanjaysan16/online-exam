@@ -438,7 +438,7 @@ const AddExam = () => {
                       <div className="form-group">
                         <lable >No of Question</lable>
                         <input
-                          type="number"
+                          type="text"
                           className="form-control"
                           id="noof.qa"
                           name="noOfQuestions"
@@ -456,7 +456,7 @@ const AddExam = () => {
                     <div className="col-sm-5 offset-md-1">
                       <label for="passpercentage">PassPercentage</label>
                       <input
-                        type="number"
+                        type="text"
                         id="passpercentage"
                         className="form-control"
                         name="passPercentage"
@@ -505,6 +505,11 @@ const AddExam = () => {
                           value={answerMust}
                           onChange={(e) => setAnswerMust(e.target.value)}
                         ></input>
+                        {/* {answerMust=='Y'}
+                        <select className="btn border w-100">
+                          <option>Y</option>
+                          <option>N</option>
+                        </select> */}
                         <p
                           id="answersMust_error"
                           className="d-none text-danger"
@@ -541,7 +546,7 @@ const AddExam = () => {
                           NegativeMarksValue
                         </label>
                         <input
-                          type="number"
+                          type="text"
                           className="form-control"
                           id="nagativemarksvalues"
                           name="negativeMarkValue"

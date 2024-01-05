@@ -15,9 +15,10 @@ import Footer from './Component/footerSectionContainer/Footer'
 import ViewQuestion from './Component/questionSectionContainer/ViewQuestion'
 import UpdateQuestion from './Component/questionSectionContainer/UpdateQuestion'
 
-import ViewUsers from './Component/userSectionContainer/ViewUsers'
-import UserExamMap from './Component/userSectionContainer/UserExamMap'
+import ViewUsers from './Component/adminSectionContainer/ViewUsers'
+import UserExamMap from './Component/adminSectionContainer/UserExamMap'
 import AdminView from "./Component/adminSectionContainer/AdminView";
+import UserDashBoard from "./Component/userSectionContainer/UserDashBoard";
 
 
 
@@ -29,7 +30,7 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-
+          
           <Route path='/' element={<Welcome />} />
           <Route path='/admin-view' element={<AdminView/>}/>
           <Route path='/add-exam' element={<AddExam/>} />
@@ -43,6 +44,7 @@ function App() {
           
           <Route path='/view-user' element={<ViewUsers/>}/>
           <Route path='/user-exam-mapping' element={<UserExamMap/>}/>
+          <Route path='/user-dashboard' element={<UserDashBoard/>}/>
         </Routes>
       </BrowserRouter>
       <Footer />

@@ -78,7 +78,7 @@ under the License.
 	    <security https="true" auth="false"/>
 	    <event type="java" path="com.vastpro.onlineexamapplication.event.ExamMasterEvent" invoke="createExam"/>	 
 	    <response name="success" type="request" value="json"/>
-	    <response name="error" type="view" value="main"/>
+	    <response name="error" type="request" value="main"/>
     </request-map>
     
     <!--update exam-->
@@ -200,11 +200,21 @@ under the License.
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>
+    
     <!--PartyRelationShip  Request Mappings -->
     
      <request-map uri="get-users">
 	    <security https="true" auth="false"/>
 	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="getUsersOfAdmin"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>
+    </request-map>
+    
+     <!--get listOfUserExamMapping  Request Mappings -->
+    
+     <request-map uri="get-list-of-user-exam-mapping">
+	    <security https="true" auth="false"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="getListOfUserExamMapping"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>
