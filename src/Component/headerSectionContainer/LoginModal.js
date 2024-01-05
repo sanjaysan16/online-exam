@@ -1,15 +1,11 @@
-import React, {  useEffect } from 'react'
-import useStateRef from 'react-usestateref';
-import { port, protocol } from '../fetchConst';
-
+import React, { useEffect } from "react";
+import useStateRef from "react-usestateref";
+import { port, protocol } from "../fetchConst";
 
 const LoginModal = () => {
-  
-   
   const [hasErrorRef, setHasError, refHasError] = useStateRef(false);
 
   const uri = `${protocol}://${window.location.hostname}:${port}`;
-
 
   const validateLoginForm = (key, value) => {
     switch (key) {
@@ -38,7 +34,6 @@ const LoginModal = () => {
         }
         break;
       case "PASSWORD":
-
         if (value === "") {
           document.getElementById("error_password").classList.remove("d-none");
           document.getElementById("error_password").classList.add("d-block");
@@ -69,32 +64,32 @@ const LoginModal = () => {
 
     if (!refHasError.current) {
       fetch(`${uri}/onlineexamapplication/control/login`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         body: JSON.stringify({ USERNAME: username, PASSWORD: password }),
         headers: {
-          'Content-Type': "application/json",
-          'Accept': "application/json"
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-      }
-
-      )
+      })
         .then((response) => response.json())
         .then((values) => {
           console.log(values);
 
           const backendResult = values.isAdmin;
           const lastName = values._lastName_;
-          if (values. _ERROR_MESSAGE_ != null) {
-            document.getElementById("error_user").classList.remove('d-none');
-            document.getElementById("error_user").classList.add('d-block');
-            document.getElementById("error_user").innerHTML = values. _ERROR_MESSAGE_;
+          if (values._ERROR_MESSAGE_ != null) {
+            document.getElementById("error_user").classList.remove("d-none");
+            document.getElementById("error_user").classList.add("d-block");
+            document.getElementById("error_user").innerHTML =
+              values._ERROR_MESSAGE_;
           }
-          const errorMessage = values. _ERROR_MESSAGE_;
-          console.log("first", errorMessage)
+          const errorMessage = values._ERROR_MESSAGE_;
+          console.log("first", errorMessage);
           if (backendResult === true) {
-
-            window.location.href = "/dash-bord"
+            window.location.href = "/dash-bord";
+          } else {
+            window.location.href = "/admin-view";
           }
           console.log(lastName);
           console.log(backendResult);
@@ -120,28 +115,54 @@ const LoginModal = () => {
 
               <div className="modal-body col-sm-10 offset-md-1">
                 <p id="error_user" className="d-none mb-0 text-danger"></p>
-                <div className='row mt-2 '>
-                  <label for='userInput ' className='text-dark ' ><h5> Username </h5></label>
-                  <input type='text' className='form-control border border-3' id='userInput' placeholder='Enter Username' name='USERNAME' />
-                  <p id="error_username" className="d-none mb-0 text-danger"></p>
-                  <label for='UserPassword ' className='text-dark mt-4 ' ><h5>Password</h5> </label>
-                  <input type='password' className='form-control border border-3' id='UserPassword' placeholder='Enter Password' name='PASSWORD' />
-                  <p id="error_password" className="d-none mb-0 text-danger"></p>
-
+                <div className="row mt-2 ">
+                  <label for="userInput " className="text-dark ">
+                    <h5> Username </h5>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control border border-3"
+                    id="userInput"
+                    placeholder="Enter Username"
+                    name="USERNAME"
+                  />
+                  <p
+                    id="error_username"
+                    className="d-none mb-0 text-danger"
+                  ></p>
+                  <label for="UserPassword " className="text-dark mt-4 ">
+                    <h5>Password</h5>{" "}
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control border border-3"
+                    id="UserPassword"
+                    placeholder="Enter Password"
+                    name="PASSWORD"
+                  />
+                  <p
+                    id="error_password"
+                    className="d-none mb-0 text-danger"
+                  ></p>
                 </div>
-
-
               </div>
-              <div className='row mb-2 px-3'>
-                <div className='col-8 gx-5'>
-                  <span className='text-dark'>If you don't have account <a href='register'>RegisterHere</a> </span>
+              <div className="row mb-2 px-3">
+                <div className="col-8 gx-5">
+                  <span className="text-dark">
+                    If you don't have account{" "}
+                    <a href="register">RegisterHere</a>{" "}
+                  </span>
                 </div>
 
-                <div className='col-4'>
-                  <button className='btn btn-secondary text-center ' type='submit'>Login</button>
+                <div className="col-4">
+                  <button
+                    className="btn btn-secondary text-center "
+                    type="submit"
+                  >
+                    Login
+                  </button>
                 </div>
               </div>
-            
             </form>
           </div>
         </div>

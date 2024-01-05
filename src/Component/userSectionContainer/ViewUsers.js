@@ -47,11 +47,11 @@ const ViewUsers = () => {
 
     return (
         <>
-        <div className="container">
+        <div className="container py-5">
             <div className="card-header">
                 <h1>Users List</h1>
             </div>
-            <div className="pb-5"style={{ "zIndex": "2000"}}>
+            <div className="pb-5"style={{ "zIndex": "3000"}}>
                 <table className='table w-70 shadow table-hover'>
                     <thead className="table-dark fs-6 ">
                         <tr >
@@ -62,7 +62,7 @@ const ViewUsers = () => {
                         </tr>
                     </thead>
                     <tbody className="fs-6">
-                        {refUsersList.current.map((user) => (
+                        {refUsersList.current.length == 0 ? setTimeout(()=><h1>no users available</h1>,1000):refUsersList.current.map((user) => (
                             <>
                                 {refListofUserLogin.current.map((userLogin) =>
                                 (userLogin.partyId === user.partyId &&
@@ -77,7 +77,8 @@ const ViewUsers = () => {
                             </>
 
                         )
-                        )}
+                        )} 
+                       
                     </tbody>
                 </table>
             </div>

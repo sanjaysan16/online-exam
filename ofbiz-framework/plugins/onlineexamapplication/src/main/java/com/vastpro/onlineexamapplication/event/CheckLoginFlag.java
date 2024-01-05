@@ -55,4 +55,21 @@ public class CheckLoginFlag {
 		request.setAttribute("isUserlogin", isUserlogin);
 		return OnlineExam.SUCCESS;
 	}
+	
+	
+//	public static String loginOrNotCheck(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		 boolean signInCheck=Boolean.valueOf(String.valueOf(request.getSession().getAttribute("signInCheck")));
+//		 
+//		 if(!signInCheck) {
+//			 String errMsg="notLogin";
+//			 String message="To Access This Page You Need To Login First";
+//			 request.setAttribute("errMsg", errMsg);
+//			 request.setAttribute("message", message);
+//			 return OnlineExam.ERROR;
+//		 }
+//		 
+//		return OnlineExam.SUCCESS;
+//		
+//	}
 }

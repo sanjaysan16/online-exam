@@ -32,12 +32,12 @@ function App() {
           <Route path='/dash-bord' element={<DashBord/>}/>
           <Route path='/' element={<Welcome />} />
           <Route path='/admin-view' element={<AdminView/>}/>
-          <Route path='/add-exam' element={<AddExam />} />
-          <Route path='/add-topic' element={<AddTopic />} />
+          <Route path='/add-exam' element={<AddExam/>} />
+          <Route path='/add-topic' element={<AddTopic/>} />
           <Route path='/view-topic' element={<TopicsDisplay/>}/>
-          <Route path='/add-question' element={<AddQuestion />} />
-          <Route path='/view-question' element={<ViewQuestion />} />
-          <Route path='/update-question' element={<UpdateQuestion />} />
+          <Route path='/add-question' element={<AddQuestion/>} />
+          <Route path='/view-question' element={<ViewQuestion/>} />
+          <Route path='/update-question' element={<UpdateQuestion/>} />
          
           <Route path='/view-exam' element={<ExamDashBord/>}/>
           
