@@ -24,7 +24,6 @@ import com.vastpro.onlineexamapplication.constant.OnlineExam;
 public class TopicEvent {
 	public static final String module = TopicEvent.class.getName();
 
-		
 	public static String createTopicMaster(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
@@ -35,99 +34,104 @@ public class TopicEvent {
 		String topicName = (String) request.getAttribute(OnlineExam.TOPIC_NAME);
 		String percentage = (String) request.getAttribute(OnlineExam.PERCENTAGE);
 		String passPercentage = (String) request.getAttribute(OnlineExam.TOPIC_PASS_PERCENTAGE);
-		
-		BigDecimal percentageFromEntity=null;
-		int totalPercentageValue=0;
-		List<Integer>topicsPercentage=new LinkedList<>();
-		List<GenericValue> topicsList=new ArrayList<>();
-		int noOfQuestions=0;
-		if(UtilValidate.isNotEmpty(examId)) {
+
+		BigDecimal percentageFromEntity = null;
+		int totalPercentageValue = 0;
+		List<Integer> topicsPercentage = new LinkedList<>();
+		List<GenericValue> topicsList = new ArrayList<>();
+		int noOfQuestions = 0;
+		if (UtilValidate.isNotEmpty(examId)) {
 			try {
-				topicsList= EntityQuery.use(delegator).from("ExamTopicMappingMaster").where("examId",examId).cache().queryList();
-				for(GenericValue listOfTopics:topicsList) {
-					percentageFromEntity=(BigDecimal) listOfTopics.get("percentage");
-					int listPercentage=percentageFromEntity.intValue();
-					
+				topicsList = EntityQuery.use(delegator).from("ExamTopicMappingMaster").where("examId", examId).cache()
+						.queryList();
+				for (GenericValue listOfTopics : topicsList) {
+					percentageFromEntity = (BigDecimal) listOfTopics.get("percentage");
+					int listPercentage = percentageFromEntity.intValue();
+
 					topicsPercentage.add(listPercentage);
-					totalPercentageValue=totalPercentageValue+listPercentage;
+					totalPercentageValue = totalPercentageValue + listPercentage;
 				}
-				GenericValue questionsPerExam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).cache().queryOne();
-				Long questions=(Long) questionsPerExam.get("noOfQuestions");
-				noOfQuestions=questions.intValue();
-				int remainingPercentage=noOfQuestions-totalPercentageValue;
-				System.out.println("this is the remaining percentage"+remainingPercentage);
-				System.out.println("this is the no of questions of the exam "+noOfQuestions);
-				
+				GenericValue questionsPerExam = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId)
+						.cache().queryOne();
+				Long questions = (Long) questionsPerExam.get("noOfQuestions");
+				noOfQuestions = questions.intValue();
+				int remainingPercentage = noOfQuestions - totalPercentageValue;
+				System.out.println("this is the remaining percentage" + remainingPercentage);
+				System.out.println("this is the no of questions of the exam " + noOfQuestions);
+
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
-			System.out.println("this is the topics list of a exam "+topicsList);
-			System.out.println("this is the total percentage of the topics"+totalPercentageValue);
+			System.out.println("this is the topics list of a exam " + topicsList);
+			System.out.println("this is the total percentage of the topics" + totalPercentageValue);
 		}
-		
-		if(totalPercentageValue<noOfQuestions) {
-		if (UtilValidate.isNotEmpty(topicIdFromFrontEnd)) {
-			if (UtilValidate.isNotEmpty(examId)) {
-				try {
-					Debug.logInfo(
-							"=======updating TopicMaster record in event using service createTopicMaster=========",
-							module);
-					Map<String, Object> editTopicMaster = dispatcher.runSync("editTopicMaster",
-							UtilMisc.toMap(OnlineExam.TOPIC_ID, topicIdFromFrontEnd, OnlineExam.TOPIC_NAME, topicName));
 
-					Debug.logInfo(
-							"=======updating ExamTopicMapping record in event using service createTopicMaster=========",
-							module);
-					Map<String, Object> editExamTopicMapping = dispatcher.runSync("editExamTopicMapping",
-							UtilMisc.toMap(OnlineExam.EXAM_ID, examId, OnlineExam.TOPIC_ID, topicIdFromFrontEnd, OnlineExam.PERCENTAGE, percentage,
-									OnlineExam.TOPIC_PASS_PERCENTAGE, passPercentage));
+		if (totalPercentageValue < noOfQuestions) {
+			if (UtilValidate.isNotEmpty(topicIdFromFrontEnd)) {
+				if (UtilValidate.isNotEmpty(examId)) {
+					try {
+						Debug.logInfo(
+								"=======updating TopicMaster record in event using service createTopicMaster=========",
+								module);
+						Map<String, Object> editTopicMaster = dispatcher.runSync("editTopicMaster", UtilMisc
+								.toMap(OnlineExam.TOPIC_ID, topicIdFromFrontEnd, OnlineExam.TOPIC_NAME, topicName));
 
-				} catch (GenericServiceException e) {
-					String errMsg = "unable to update records in topicMaster or examTopicMapping " + e.toString();
-					request.setAttribute("Error", errMsg);
-					return OnlineExam.ERROR;
+						Debug.logInfo(
+								"=======updating ExamTopicMapping record in event using service createTopicMaster=========",
+								module);
+						Map<String, Object> editExamTopicMapping = dispatcher.runSync("editExamTopicMapping",
+								UtilMisc.toMap(OnlineExam.EXAM_ID, examId, OnlineExam.TOPIC_ID, topicIdFromFrontEnd,
+										OnlineExam.PERCENTAGE, percentage, OnlineExam.TOPIC_PASS_PERCENTAGE,
+										passPercentage));
+
+					} catch (GenericServiceException e) {
+						String errMsg = "unable to update records in topicMaster or examTopicMapping " + e.toString();
+						request.setAttribute("Error", errMsg);
+						return OnlineExam.ERROR;
+					}
+					request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping updated successfully");
+					return OnlineExam.SUCCESS;
 				}
-				request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping updated successfully");
-				return OnlineExam.SUCCESS;
+				String errMsg = "could not find examId " + examId;
+				request.setAttribute("Error", errMsg);
+				return OnlineExam.ERROR;
 			}
-			String errMsg = "could not find examId " + examId;
-			request.setAttribute("Error", errMsg);
-			return OnlineExam.ERROR;
-		}
 
-		if (UtilValidate.isEmpty(topicName)) {
-			String errMsg = "topicName is required field";
-			request.setAttribute("ERROR_MESSAGE", errMsg);
-			return OnlineExam.ERROR;
-		}
-		try {
-			Debug.logInfo("=======Creating TopicMaster record in event using service createTopicMaster=========",
-					module);
-			Map<String, Object> topicDetails = dispatcher.runSync("createTopicMaster",
-					UtilMisc.toMap(OnlineExam.TOPIC_NAME, topicName));
-			String topicIdForCreation = (String) topicDetails.get(OnlineExam.TOPIC_ID);
+			if (UtilValidate.isEmpty(topicName)) {
+				String errMsg = "topicName is required field";
+				request.setAttribute("ERROR_MESSAGE", errMsg);
+				return OnlineExam.ERROR;
+			}
+			try {
+				Debug.logInfo("=======Creating TopicMaster record in event using service createTopicMaster=========",
+						module);
+				Map<String, Object> topicDetails = dispatcher.runSync("createTopicMaster",
+						UtilMisc.toMap(OnlineExam.TOPIC_NAME, topicName));
+				String topicIdForCreation = (String) topicDetails.get(OnlineExam.TOPIC_ID);
 
-			Debug.logInfo("=======Creating ExamTopicMapping record in event using service createTopicMaster=========",
-					module);
-			Map<String, Object> examTopicMappingDetails  = dispatcher.runSync("examTopicMapping", UtilMisc.toMap("examId", examId,
-					OnlineExam.TOPIC_ID, topicIdForCreation, OnlineExam.PERCENTAGE, percentage, OnlineExam.TOPIC_PASS_PERCENTAGE, passPercentage));
-			request.setAttribute(OnlineExam.TOPIC_NAME, topicName);
-			request.setAttribute("EVENT_MESSAGE", examTopicMappingDetails);
+				Debug.logInfo(
+						"=======Creating ExamTopicMapping record in event using service createTopicMaster=========",
+						module);
+				Map<String, Object> examTopicMappingDetails = dispatcher.runSync("examTopicMapping",
+						UtilMisc.toMap("examId", examId, OnlineExam.TOPIC_ID, topicIdForCreation, OnlineExam.PERCENTAGE,
+								percentage, OnlineExam.TOPIC_PASS_PERCENTAGE, passPercentage));
+				request.setAttribute(OnlineExam.TOPIC_NAME, topicName);
+				request.setAttribute("EVENT_MESSAGE", examTopicMappingDetails);
 
-		} catch (GenericServiceException e) {
-			String errMsg = "Unable to create new records in TopicMaster entity: " + e.toString();
-			request.setAttribute("ERROR_MESSAGE", errMsg);
-			return OnlineExam.ERROR;
-		}
-		
-		}else {
-			String errMsg="topic cannot be created because percentage of the exam is less than topic percentage";
+			} catch (GenericServiceException e) {
+				String errMsg = "Unable to create new records in TopicMaster entity: " + e.toString();
+				request.setAttribute("ERROR_MESSAGE", errMsg);
+				return OnlineExam.ERROR;
+			}
+
+		} else {
+			String errMsg = "topic cannot be created because percentage of the exam is less than topic percentage";
 			request.setAttribute("EVENT_MESSAGE", errMsg);
 		}
 		request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping created successfully");
 		return OnlineExam.SUCCESS;
 	}
-	
+
 	public static String getTopicMaster(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 
@@ -161,9 +165,9 @@ public class TopicEvent {
 		request.setAttribute("result", result);
 		return OnlineExam.ERROR;
 	}
-	
-	
+
 	public static String deleteTopic(HttpServletRequest request, HttpServletResponse response) {
+
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
 		String examId = request.getParameter("examId");
@@ -228,8 +232,9 @@ public class TopicEvent {
 		request.setAttribute("errMsg", errMsg);
 		return OnlineExam.ERROR;
 	}
-	
+
 	public static String topicList(HttpServletRequest request, HttpServletResponse response) {
+	
 
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
@@ -265,5 +270,5 @@ public class TopicEvent {
 		request.setAttribute("errMsg", errMsg);
 		return OnlineExam.ERROR;
 	}
-	
+
 }

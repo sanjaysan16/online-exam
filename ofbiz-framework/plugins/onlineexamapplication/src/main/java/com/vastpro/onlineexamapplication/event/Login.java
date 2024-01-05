@@ -35,6 +35,8 @@ public class Login {
 			System.out.println("this is the login result"+loginResult);
 			
 			if(loginResult=="success") {
+				boolean signInCheck=true;
+				session.setAttribute("signInCheck", signInCheck);
 				try {
 					GenericValue userLogin=EntityQuery.use(delegator).from("UserLogin").where("userLoginId",userName).cache().queryOne();
 					String partyId=(String) userLogin.get("partyId");
@@ -49,6 +51,7 @@ public class Login {
 							}
 							request.setAttribute("isAdmin", flag);
 							session.setAttribute("isAdmin", flag);
+							session.setAttribute("userLogin", userLogin);
 							System.out.println("this is flag of user "+flag);
 						}else {
 							String errMsg="roll is not created for a user";

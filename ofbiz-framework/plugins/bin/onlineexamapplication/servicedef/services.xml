@@ -37,12 +37,20 @@ under the License.
   
    </service>
 
-   <service name="createQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
+  
+
+<service name="create" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
        <description>createQuestionMaster</description>
        <auto-attributes include="pk" mode="OUT" optional="true"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/>
        <override name="questionDetail" optional="true"/> 
     </service>
+
+           <service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
+           <description>createQuestionMaster</description>
+       <auto-attributes include="pk" mode="OUT" optional="true"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/>
+           </service>
 
     <service name="updateExam" default-entity-name="ExamMaster" engine="entity-auto" invoke="update" auth="false">
        <description>updateExam</description>
@@ -59,11 +67,11 @@ under the License.
    <attribute name="listOfQuestion" mode="OUT" optional="true" type="List" ></attribute>
    </service>
 
-    <service name='DeleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
+    <service name='deleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
     <auto-attributes include='pk' mode='IN' optional='false'/>
     </service>
 
-    <service name="updateQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="update" auth="false">
+    <service name="updateExistingQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="update" auth="false">
        <description>updateQuestionMaster</description>
        <auto-attributes include="pk" mode="IN" optional="false"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/> 
