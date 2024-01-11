@@ -1,5 +1,6 @@
 package com.vastpro.onlineexamapplication.event;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,7 @@ public class Login {
 		String userName=(String)fieldsMap.get("USERNAME");
 		String password=(String)fieldsMap.get("PASSWORD");
 		boolean flag=false;
-		if(UtilValidate.isNotEmpty("userName")) {
+		if(UtilValidate.isNotEmpty(userName)) {
 			String loginResult=LoginWorker.login(request, response);
 			System.out.println("this is the login result"+loginResult);
 			
@@ -41,8 +42,9 @@ public class Login {
 					GenericValue userLogin=EntityQuery.use(delegator).from("UserLogin").where("userLoginId",userName).cache().queryOne();
 					String partyId=(String) userLogin.get("partyId");
 					if(UtilValidate.isNotEmpty(partyId)) {
-						GenericValue partyRole=EntityQuery.use(delegator).from("PartyRole").where("partyId",partyId).cache().queryOne();
-						String roleOfUser=(String) partyRole.get("roleTypeId");
+						List<GenericValue> partyRole=EntityQuery.use(delegator).from("PartyRole").where("partyId",partyId).cache().queryList();
+						GenericValue genericValueOfPartyRole = partyRole.get(1);
+						String roleOfUser=(String) genericValueOfPartyRole.get("roleTypeId");
 						if(UtilValidate.isNotEmpty(roleOfUser)) {
 							if(roleOfUser.equalsIgnoreCase("adminExam")) {
 								 flag=true;

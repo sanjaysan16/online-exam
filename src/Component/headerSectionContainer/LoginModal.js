@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import useStateRef from "react-usestateref";
 import { port, protocol } from "../fetchConst";
-
+import 'fa-icons';
 const LoginModal = () => {
   const [hasErrorRef, setHasError, refHasError] = useStateRef(false);
 
@@ -89,7 +89,7 @@ const LoginModal = () => {
           if (backendResult === true) {
             window.location.href = "/dash-bord";
           } else {
-            window.location.href = "/admin-view";
+            window.location.href = "/user-dashboard";
           }
           console.log(lastName);
           console.log(backendResult);
@@ -131,7 +131,7 @@ const LoginModal = () => {
                     className="d-none mb-0 text-danger"
                   ></p>
                   <label for="UserPassword " className="text-dark mt-4 ">
-                    <h5>Password</h5>{" "}
+                    <h5>Password</h5>
                   </label>
                   <input
                     type="password"
@@ -140,6 +140,8 @@ const LoginModal = () => {
                     placeholder="Enter Password"
                     name="PASSWORD"
                   />
+                  <i className="far fa-eye" id="togglePassword" style={{"margin-left": "-30px", "cursor": "pointer"}}></i>
+
                   <p
                     id="error_password"
                     className="d-none mb-0 text-danger"

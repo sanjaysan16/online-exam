@@ -56,6 +56,15 @@ under the License.
        <override name="questionDetail" optional="true"/>
     </service>
 
+	<service name="createNewQuestionService"
+		default-entity-name="QuestionMaster" engine="entity-auto"
+		invoke="create" auth="false">
+		<description>createQuestionMaster</description>
+		<auto-attributes include="pk" mode="OUT"
+			optional="true" />
+		<auto-attributes include="nonpk" mode="IN"
+			optional="true" />
+	</service>
 
     <service name='DeleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
     <auto-attributes include='pk' mode='IN' optional='false'/>
@@ -119,6 +128,7 @@ under the License.
        <description>updateQuestionMaster</description>
        <auto-attributes include="pk" mode="IN" optional="false"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/> 
+       </service>
      <!--UserExamMapping services-->
      
     <service name="createUserExamMapping" default-entity-name="UserExamMappingMaster" engine="entity-auto" invoke="create" auth="false">

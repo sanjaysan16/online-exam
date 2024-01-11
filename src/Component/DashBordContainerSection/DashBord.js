@@ -1,28 +1,28 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useStateRef from "react-usestateref";
 import { AppContext } from "../headerSectionContainer/Header";
 import { port, protocol } from "../fetchConst";
 
 const DashBord = () => {
-    const[partyIdOfAdmin,setPartyIdOfAdmin,refPartyIdOfAdmin]=useStateRef()
-  const uri=`${protocol}://${window.location.hostname}:${port}`
+  const [partyIdOfAdmin, setPartyIdOfAdmin, refPartyIdOfAdmin] = useStateRef()
+  const uri = `${protocol}://${window.location.hostname}:${port}`
   const navigate = useNavigate();
 
-  useEffect(()=>{
+  useEffect(() => {
     getPartyId()
-  },[])
-  function getPartyId(){
-    fetch(`${uri}/onlineexamapplication/control/get-partyid`,{credentials:"include"})
-    .then(res=> res.json())
-    .then(data=>
-        setPartyIdOfAdmin(data.partyId) 
-        )
+  }, [])
+  function getPartyId() {
+    fetch(`${uri}/onlineexamapplication/control/get-partyid`, { credentials: "include" })
+      .then(res => res.json())
+      .then(data =>
+        setPartyIdOfAdmin(data.partyId)
+      )
   }
-  
+
   return (
     <>
-      <div className="row mt-3 ">
+      <div className="row py-5 g-0">
         <div
           class="border col-sm-3 card p-0 m-5 offset-md-1 custom-bd-color"
           onClick={() => {

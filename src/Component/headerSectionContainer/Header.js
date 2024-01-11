@@ -6,6 +6,7 @@ import "bootstrap/js/dist/dropdown";
 import { useEffect, useState } from "react";
 import useStateRef from "react-usestateref";
 import { port, protocol } from "../fetchConst";
+import Result from "../userSectionContainer/Result";
 
 
 
@@ -25,8 +26,8 @@ const Header = () => {
         console.log(data);
         const responseName = data.userFirstName;
         setFlag(data.isUserlogin);
-       
-         setPartyIdOfAdmin(data.partyId);
+
+        setPartyIdOfAdmin(data.partyId);
         setName(responseName);
 
         console.log("this is flag ", flag);
@@ -50,9 +51,13 @@ const Header = () => {
     trigger();
   }, []);
 
+
+
   return (
     <>
+
       <LoginModal />
+
       <div className="sidebar-nav nav-color ">
         <nav className="navbar navbar-dark nav-color ">
           <div className="mx-2">
@@ -117,6 +122,14 @@ const Header = () => {
                       <span className="item-text text-light">User</span>
                     </a>
                   </li>
+
+                  <li>
+                    <a href="view-result">
+                      <i className="bi bi-blockquote-right text-light"></i>
+                      <span className="item-text text-light">Result</span>
+                    </a>
+                  </li>
+
                 </ul>
               </div>
 

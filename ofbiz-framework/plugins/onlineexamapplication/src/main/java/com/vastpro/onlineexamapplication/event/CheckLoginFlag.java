@@ -20,7 +20,7 @@ public class CheckLoginFlag {
 		GenericValue userDetails = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
 		  HttpSession session = request.getSession();
 		String partyId = OnlineExam.NULL;
-
+		String firstName=null;
 		
 		if (UtilValidate.isNotEmpty(userDetails)) {
 			partyId = (String) userDetails.get("partyId");
@@ -33,7 +33,7 @@ public class CheckLoginFlag {
 				try {
 					GenericValue personDetails = EntityQuery.use(delegator).from("Person").where("partyId",partyId).cache().queryOne();
 					if(UtilValidate.isNotEmpty(personDetails)) {
-						String firstName=(String)personDetails.get("firstName");
+						firstName=(String)personDetails.get("firstName");
 						request.setAttribute("userFirstName", firstName);
 						return OnlineExam.SUCCESS;
 					}else {
@@ -53,6 +53,8 @@ public class CheckLoginFlag {
 			
 		}
 		request.setAttribute("isUserlogin", isUserlogin);
+		request.setAttribute("userFirstName", firstName);
+
 		return OnlineExam.SUCCESS;
 	}
 	

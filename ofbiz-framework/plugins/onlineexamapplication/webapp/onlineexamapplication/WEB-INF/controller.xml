@@ -248,6 +248,28 @@ under the License.
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>
+    
+    <request-map uri="get-result">
+    	<security https="true" auth="false"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.ResultCheck" invoke="checkResult"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>	    
+    </request-map>
+    
+    <request-map uri="get-topics-of-exam">
+    	<security https="true" auth="false"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.UserExamList" invoke="showExam"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>	    
+    </request-map>
+    
+    <request-map uri="get-questions-list">
+    	<security https="true" auth="false"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.UserExamList" invoke="topicQuestionList"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>	    
+    </request-map>
+    
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://onlineexamapplication/widget/OnlineexamapplicationScreens.xml#main"/>

@@ -20,6 +20,12 @@ import UserExamMap from './Component/adminSectionContainer/UserExamMap'
 import AdminView from "./Component/adminSectionContainer/AdminView";
 import UserDashBoard from "./Component/userSectionContainer/UserDashBoard";
 import DashBord from "./Component/DashBordContainerSection/DashBord";
+import ReportCard from "./Component/adminSectionContainer/ReportCard";
+import Result from "./Component/userSectionContainer/Result";
+import UserAttempt from "./Component/userSectionContainer/UserAttempt";
+import ExamInstruction from "./Component/userSectionContainer/ExamInstruction";
+import TakingExam from "./Component/userSectionContainer/TakingExam";
+import ExamDashBoardForUser from "./Component/userSectionContainer/ExamDashBoardForUser";
 
 
 
@@ -31,22 +37,27 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          
+
           <Route path='/' element={<Welcome />} />
-          <Route path='/admin-view' element={<AdminView/>}/>
-          <Route path='/dash-bord' element={<DashBord/>}/>
-          <Route path='/add-exam' element={<AddExam/>} />
-          <Route path='/add-topic' element={<AddTopic/>} />
-          <Route path='/view-topic' element={<TopicsDisplay/>}/>
-          <Route path='/add-question' element={<AddQuestion/>} />
-          <Route path='/view-question' element={<ViewQuestion/>} />
-          <Route path='/update-question' element={<UpdateQuestion/>} />
-         
-          <Route path='/view-exam' element={<ExamDashBord/>}/>
-          
-          <Route path='/view-user' element={<ViewUsers/>}/>
-          <Route path='/user-exam-mapping' element={<UserExamMap/>}/>
-          <Route path='/user-dashboard' element={<UserDashBoard/>}/>
+          <Route path='/admin-view' element={<AdminView />} />
+          <Route path='/dash-bord' element={<DashBord />} />
+          <Route path='/add-exam' element={<AddExam />} />
+          <Route path='/add-topic' element={<AddTopic />} />
+          <Route path='/view-topic' element={<TopicsDisplay />} />
+          <Route path='/add-question' element={<AddQuestion />} />
+          <Route path='/view-question' element={<ViewQuestion />} />
+          <Route path='/update-question' element={<UpdateQuestion />} />
+
+          <Route path='/view-exam' element={<ExamDashBord />} />
+          <Route path='/view-result' element={<ReportCard />} />
+          <Route path='/view-user' element={<ViewUsers />} />
+          <Route path='/result' element={<Result />} />
+          <Route path='/exam-instruction' element={<ExamInstruction />} />
+          <Route path='/taking-exam' element={<TakingExam />} />
+          <Route path='/user-exam-dashboard' element={<ExamDashBoardForUser />} />
+          <Route path='/user-attempt' element={<UserAttempt />} />
+          <Route path='/user-exam-mapping' element={<UserExamMap />} />
+          <Route path='/user-dashboard' element={<UserDashBoard />} />
         </Routes>
       </BrowserRouter>
       <Footer />

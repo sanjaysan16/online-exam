@@ -41,6 +41,8 @@ public class QusetionEvent {
 		String questionDetail = (String) fields.get(OnlineExam.QUESTION_DETAIL);
 
 		try {
+			
+			
 			questionDetailCheck = EntityQuery.use(delegator).from(OnlineExam.Question_Master)
 					.where(OnlineExam.QUESTION_DETAIL, questionDetail).cache().queryOne();
 

@@ -20,7 +20,6 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.bouncycastle.pqc.jcajce.provider.lms.LMSSignatureSpi.generic;
 
 import com.vastpro.onlineexamapplication.constant.OnlineExam;
 
@@ -30,13 +29,14 @@ public class UserEvent {
 
 	public static String getUsersOfAdmin(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
+		GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
-		String partyIdOfAdmin = (String) request.getAttribute("partyIdOfAdmin");
+		String partyIdOfAdmin = (String) userLogin.get("partyId");
 
 		List<GenericValue> listOfUsersPartyId = null;
-		List<Map<String,Object>> listOfUserDetails = new ArrayList<>();
+		List<Map<String, Object>> listOfUserDetails = new ArrayList<>();
 //		Map<String, Object> listOfUserDetails = new HashMap<>();
-		GenericValue partyRoleOfAdmin;
+		List<GenericValue> partyRoleOfAdmin;
 
 		if (UtilValidate.isEmpty(partyIdOfAdmin)) {
 			String errMsg = "partyIdOfAdmin is required";
@@ -46,9 +46,11 @@ public class UserEvent {
 
 		try {
 			partyRoleOfAdmin = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyIdOfAdmin).cache()
-					.queryOne();
-			if (UtilValidate.isNotEmpty(partyRoleOfAdmin)) {
-				String roleTypeIdOfAdmin = (String) partyRoleOfAdmin.get("roleTypeId");
+					.queryList();
+			GenericValue partyRole = partyRoleOfAdmin.get(1);
+
+			if (UtilValidate.isNotEmpty(partyRole)) {
+				String roleTypeIdOfAdmin = (String) partyRole.get("roleTypeId");
 				if (roleTypeIdOfAdmin.equals("adminExam")) {
 					try {
 						Debug.logInfo("=======Getting records from PartyRelationship=======", module);
@@ -64,25 +66,25 @@ public class UserEvent {
 							GenericValue user = EntityQuery.use(delegator).from("Person").where("partyId", partyIdTo)
 									.cache().queryOne();
 							if (UtilValidate.isNotEmpty(user)) {
-								//creating one map to put user details
-								Map<String, Object> userDetailMap=new HashMap<String, Object>();
-								
-								String firstNameOfUser = (String)user.get("firstName");
-								String lastNameOfUser = (String)user.get("lastName");
-								String genderOfUser = (String)user.get("gender");
-								String partyIdOfUser = (String)user.get("partyId");
-								
+								// creating one map to put user details
+								Map<String, Object> userDetailMap = new HashMap<String, Object>();
+
+								String firstNameOfUser = (String) user.get("firstName");
+								String lastNameOfUser = (String) user.get("lastName");
+								String genderOfUser = (String) user.get("gender");
+								String partyIdOfUser = (String) user.get("partyId");
+
 								userDetailMap.put("firstName", firstNameOfUser);
 								userDetailMap.put("lastName", lastNameOfUser);
 								userDetailMap.put("gender", genderOfUser);
 								userDetailMap.put("partyId", partyIdOfUser);
-								
-								GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin")
+
+								GenericValue userLoginForStudent = EntityQuery.use(delegator).from("UserLogin")
 										.where("partyId", partyIdTo).cache().queryOne();
-								
-								if (UtilValidate.isNotEmpty(userLogin)) {
-									String userLoginId = (String)userLogin.get("userLoginId");
-									userDetailMap.put("userLoginId", userLoginId);
+
+								if (UtilValidate.isNotEmpty(userLoginForStudent)) {
+									String userLoginIdForStudent = (String) userLoginForStudent.get("userLoginId");
+									userDetailMap.put("userLoginId", userLoginIdForStudent);
 									listOfUserDetails.add(userDetailMap);
 								}
 							}
@@ -119,22 +121,25 @@ public class UserEvent {
 	 * @param partyIdOfUser
 	 * @return
 	 */
-	private static String checkUserOrNot(HttpServletRequest request, String partyIdOfUser) {
+	private static String checkStudentOrNot(HttpServletRequest request, String partyIdOfUser) {
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
-		GenericValue partyRoleOfuser;
+		List<GenericValue> userPartyRoleWithNa;
 		if (UtilValidate.isNotEmpty(partyIdOfUser)) {
 			try {
 				// checking a given partyIdOfUser
-				partyRoleOfuser = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyIdOfUser).cache()
-						.queryOne();
+				userPartyRoleWithNa = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyIdOfUser)
+						.cache().queryList();
+				GenericValue partyRoleOfuser = userPartyRoleWithNa.get(1);
 				if (UtilValidate.isEmpty(partyRoleOfuser)) {
-					String errMsg = "unable to find User for given partyId";
+					String errMsg = "unable to find student for given partyId";
 					request.setAttribute("ERROR", errMsg);
 					return OnlineExam.ERROR;
 				}
 				String roleTypeIdOfUser = (String) partyRoleOfuser.get("roleTypeId");
-				if (!roleTypeIdOfUser.equals("User")) {
-					String errMsg = "given partyId is not a user";
+				if (roleTypeIdOfUser.equals("student")) {
+					return OnlineExam.SUCCESS;
+				} else {
+					String errMsg = "given partyId is not a student";
 					request.setAttribute("ERROR", errMsg);
 					return OnlineExam.ERROR;
 				}
@@ -143,10 +148,12 @@ public class UserEvent {
 				request.setAttribute("ERROR", errMsg);
 				return OnlineExam.ERROR;
 			}
-			return OnlineExam.SUCCESS;
+		} else {
+			return OnlineExam.ERROR;
 		}
-		return OnlineExam.ERROR;
+
 	}
+
 	/**
 	 * createUserExamMapping
 	 * 
@@ -162,110 +169,139 @@ public class UserEvent {
 		Map<String, Object> userExamMap = UtilHttp.getCombinedMap(request);
 		String partyIdOfUser = (String) userExamMap.get("partyIdOfUser");
 		userExamMap.remove("partyIdOfUser");
-		GenericValue partyRoleOfuser;
+		List<GenericValue> userPartyRoleWithNa;
 
 		if (UtilValidate.isNotEmpty(partyIdOfUser)) {
 			try {
 				// checking a given partyIdOfUser
-				partyRoleOfuser = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyIdOfUser).cache()
-						.queryOne();
+				userPartyRoleWithNa = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyIdOfUser)
+						.cache().queryList();
+				GenericValue partyRoleOfuser = userPartyRoleWithNa.get(1);
 				if (UtilValidate.isEmpty(partyRoleOfuser)) {
 					String errMsg = "unable to find User for given partyId";
 					request.setAttribute("ERROR", errMsg);
 					return OnlineExam.ERROR;
 				}
 				String roleTypeIdOfUser = (String) partyRoleOfuser.get("roleTypeId");
-				if (!roleTypeIdOfUser.equals("User")) {
+				if (roleTypeIdOfUser.equals("student")) {
+					// getting all AttributeNames from request
+
+					Enumeration<String> chooseExams = request.getAttributeNames();
+
+					// putting a chooseExams into the loop to get "examId"
+
+					while (chooseExams.hasMoreElements()) {
+						// creating CharSequence for get chosen examIds key from "chooseExams"
+
+						CharSequence CharSequenceOfExamId = "choose-exam-";
+						String examId = chooseExams.nextElement();
+
+						// checking the examId contains CharSequenceOfExamId
+						if (examId.contains(CharSequenceOfExamId)) {
+							String examIdString = (String) userExamMap.get(examId);
+							try {
+								// checking a the examId is presented or not in ExamMaster entity
+								GenericValue examDetails = EntityQuery.use(delegator).from(OnlineExam.Exam_Master)
+										.where("examId", examIdString).cache().queryOne();
+								// checking examDetails null or not
+								if (UtilValidate.isEmpty(examDetails)) {
+									String errMsg = "unable to find exam in the ExamMaster entity ";
+									request.setAttribute("ERROR", errMsg);
+									return OnlineExam.ERROR;
+								}
+
+								try {
+
+									GenericValue UserExamMappingCheck = EntityQuery.use(delegator)
+											.from("UserExamMappingMaster")
+											.where("partyId", partyIdOfUser, "examId", examIdString).cache().queryOne();
+									if (UtilValidate.isEmpty(UserExamMappingCheck)) {
+										// calling service to create userExam
+										Map<String, Object> createUserExamMapping = dispatcher.runSync(
+												"createUserExamMapping",
+												UtilMisc.toMap("partyId", partyIdOfUser, "examId", examIdString,
+														"allowedAttempts", OnlineExam.ALLOWED_ATTEMPTS, "noOfAttempts",
+														OnlineExam.NO_OF_ATTEMPTS, "lastPerformanceDate",
+														OnlineExam.LAST_PERFORMANCE_DATE, "timeoutDays",
+														OnlineExam.TIMEOUT_DAYS, "passwordChangesAuto",
+														OnlineExam.PASSWORD_CHANGES_AUTO, "canSplitExams",
+														OnlineExam.CAN_SPLIT_EXAMS, "canSeeDetailedResults",
+														OnlineExam.CAN_SEE_DETAILED_RESULTS, "maxSplitAttempts",
+														OnlineExam.MAX_SPLIT_ATTEMPTS, "userLogin", userLogin));
+
+										if (ServiceUtil.isError(createUserExamMapping)) {
+											String errMsg = "createUserExamMapping sevice error";
+											request.setAttribute("ERROR", errMsg);
+											return OnlineExam.ERROR;
+										}
+									}
+
+								} catch (GenericServiceException e) {
+									String errMsg = "unable to connet to the UserExamMappingMaster entity "
+											+ e.toString();
+									request.setAttribute("ERROR", errMsg);
+									return OnlineExam.ERROR;
+								}
+
+							} catch (GenericEntityException e) {
+								String errMsg = "unable to connet to the ExamMaster entity " + e.toString();
+								request.setAttribute("ERROR", errMsg);
+								return OnlineExam.ERROR;
+							}
+						}
+					}
+				} else {
 					String errMsg = "given partyId is not a user";
 					request.setAttribute("ERROR", errMsg);
 					return OnlineExam.ERROR;
-
 				}
-				// getting all AttributeNames from request
-
-				Enumeration<String> chooseExams = request.getAttributeNames();
-
-				// putting a chooseExams into the loop to get "examId"
-
-				while (chooseExams.hasMoreElements()) {
-					// creating CharSequence for get chosen examIds key from "chooseExams"
-					CharSequence CharSequenceOfExamId = "choose-exam-";
-					String examId = chooseExams.nextElement();
-					// checking the examId contains CharSequenceOfExamId
-					if (examId.contains(CharSequenceOfExamId)) {
-						String examIdString = (String) userExamMap.get(examId);
-						try {
-							// checking a the examId is presented or not in ExamMaster entity
-							GenericValue examDetails = EntityQuery.use(delegator).from(OnlineExam.Exam_Master)
-									.where("examId", examIdString).cache().queryOne();
-							// checking examDetails null or not
-							if (UtilValidate.isEmpty(examDetails)) {
-								String errMsg = "unable to find exam in the ExamMaster entity ";
-								request.setAttribute("ERROR", errMsg);
-								return OnlineExam.ERROR;
-							}
-
-							try {
-
-								GenericValue UserExamMappingCheck = EntityQuery.use(delegator)
-										.from("UserExamMappingMaster")
-										.where("partyId", partyIdOfUser, "examId", examIdString).cache().queryOne();
-								if (UtilValidate.isEmpty(UserExamMappingCheck)) {
-									// calling service to create userExam
-									Map<String, Object> createUserExamMapping = dispatcher.runSync(
-											"createUserExamMapping",
-											UtilMisc.toMap("partyId", partyIdOfUser, "examId", examIdString,
-													"allowedAttempts", OnlineExam.ALLOWED_ATTEMPTS, "noOfAttempts",
-													OnlineExam.NO_OF_ATTEMPTS, "lastPerformanceDate",
-													OnlineExam.LAST_PERFORMANCE_DATE, "timeoutDays",
-													OnlineExam.TIMEOUT_DAYS, "passwordChangesAuto",
-													OnlineExam.PASSWORD_CHANGES_AUTO, "canSplitExams",
-													OnlineExam.CAN_SPLIT_EXAMS, "canSeeDetailedResults",
-													OnlineExam.CAN_SEE_DETAILED_RESULTS, "maxSplitAttempts",
-													OnlineExam.MAX_SPLIT_ATTEMPTS, "userLogin", userLogin));
-
-									if (ServiceUtil.isError(createUserExamMapping)) {
-										String errMsg = "createUserExamMapping sevice error";
-										request.setAttribute("ERROR", errMsg);
-										return OnlineExam.ERROR;
-									}
-								}
-
-							} catch (GenericServiceException e) {
-								String errMsg = "unable to connet to the UserExamMappingMaster entity " + e.toString();
-								request.setAttribute("ERROR", errMsg);
-								return OnlineExam.ERROR;
-							}
-
-						} catch (GenericEntityException e) {
-							String errMsg = "unable to connet to the ExamMaster entity " + e.toString();
-							request.setAttribute("ERROR", errMsg);
-							return OnlineExam.ERROR;
-						}
-					}
-				}
-
 			} catch (GenericEntityException e) {
 				String errMsg = "unable to connet to the PartyRole entity " + e.toString();
 				request.setAttribute("ERROR", errMsg);
 				return OnlineExam.ERROR;
 			}
+			request.setAttribute("EVENT", "UserExamMapping success");
+			return OnlineExam.SUCCESS;
 		}
-		request.setAttribute("EVENT", "UserExamMapping success");
-		return OnlineExam.SUCCESS;
+		else {
+			String errMsg = "partyIdOfUser is empty ";
+			request.setAttribute("ERROR", errMsg);
+			return OnlineExam.ERROR;
+		}
+		
 	}
+	/**
+	 * getListOfUserExamMapping
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 
 	public static String getListOfUserExamMapping(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
-//		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
-
+		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
+		String partyIdOfUser = null;
 		Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
-
-		String partyIdOfUser = (String) combinedMap.get("partyIdOfUser");
-		String userOrNot = checkUserOrNot(request, partyIdOfUser);
+		String partyIdOfUserInUserLogin = (String) userLogin.get("partyId");
 		List<GenericValue> listOfMappedExams = new ArrayList<GenericValue>();
 		List<GenericValue> listOfUnMappedExams = new ArrayList<GenericValue>();
 		Map<String, Object> mappedAndUnMappedExams = new HashMap<String, Object>();
+		String userOrNot = null;
+		if (UtilValidate.isNotEmpty(partyIdOfUserInUserLogin)) {
+			userOrNot = checkStudentOrNot(request, partyIdOfUserInUserLogin);
+			if (userOrNot.equals(OnlineExam.SUCCESS)) {
+				partyIdOfUser = partyIdOfUserInUserLogin;
+			} else {
+				String partyIdOfUserInCombinedMap = (String) combinedMap.get("partyIdOfUser");
+				partyIdOfUser = partyIdOfUserInCombinedMap;
+				userOrNot = checkStudentOrNot(request, partyIdOfUserInCombinedMap);
+			}
+		} else {
+			String errMsg = "pls login first";
+			request.setAttribute("ERROR", errMsg);
+			return OnlineExam.ERROR;
+		}
+
 		if (userOrNot.equals(OnlineExam.SUCCESS)) {
 
 			try {
@@ -276,17 +312,17 @@ public class UserEvent {
 				if (UtilValidate.isNotEmpty(listOfUserExamMapping)) {
 					if (UtilValidate.isNotEmpty(listOfExam)) {
 						for (GenericValue exam : listOfExam) {
-						   boolean userExanMapChecker=false;
+							boolean userExanMapChecker = false;
 							String examIdOfListOfExam = (String) exam.get(OnlineExam.EXAM_ID);
 							for (GenericValue UserExamMapping : listOfUserExamMapping) {
 								String examIdOfUserExamMapping = (String) UserExamMapping.get(OnlineExam.EXAM_ID);
 								if (examIdOfUserExamMapping.equals(examIdOfListOfExam)) {
-									userExanMapChecker=true;
+									userExanMapChecker = true;
 									listOfMappedExams.add(exam);
 									break;
 								}
 							}
-							if(!userExanMapChecker) {
+							if (!userExanMapChecker) {
 								listOfUnMappedExams.add(exam);
 							}
 						}
@@ -301,9 +337,10 @@ public class UserEvent {
 					request.setAttribute("ERROR", errMsg);
 					return OnlineExam.ERROR;
 				}
-				String errMsg = "given partyId in not found in userExamMapping";
-				request.setAttribute("ERROR", errMsg);
-				return OnlineExam.ERROR;
+				mappedAndUnMappedExams.put("listOfMappedExams", listOfMappedExams);
+				mappedAndUnMappedExams.put("listOfUnMappedExams", listOfExam);
+				request.setAttribute("mappedAndUnMappedExams", mappedAndUnMappedExams);
+				return OnlineExam.SUCCESS;
 			} catch (GenericEntityException e) {
 				String errMsg = "unable to connet userExamMapping entity " + e.toString();
 				request.setAttribute("ERROR", errMsg);

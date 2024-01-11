@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import useStateRef from "react-usestateref";
 import { port, protocol } from "../fetchConst";
 import WarningModal from "../adminSectionContainer/WarningModal";
+import swal from "sweetalert";
 
 function AddQuestion() {
   const uri = `${protocol}://${window.location.hostname}:${port}`;
@@ -185,7 +186,7 @@ function AddQuestion() {
         answers.questionType = questionType;
 
         const res = await fetch(
-          `${uri}/onlineexamapplication/control/CreateQuestionMaster?topicId=${topicId}`,
+          `${uri}/onlineexamapplication/control/create-new-question?topicId=${topicId}`,
           {
             method: "POST",
             credentials: "include",
@@ -223,7 +224,7 @@ function AddQuestion() {
 
   return (
     <>
-     <p
+      <p
         id="addquestionadmincheck"
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"

@@ -20,9 +20,10 @@ const UserExamMap = () => {
             body: JSON.stringify({ partyIdOfUser: location.state.user.partyId }),
             headers: {
                 'Content-Type': 'application/json'
-            }
+              }
         });
         const userExamMappedList = await userExamMappedFetch.json();
+        console.log(userExamMappedList)
         setListOfMappedExams(userExamMappedList.mappedAndUnMappedExams.listOfMappedExams);
         setListOfUnMappedExams(userExamMappedList.mappedAndUnMappedExams.listOfUnMappedExams);
     }
@@ -65,6 +66,7 @@ const UserExamMap = () => {
                 });
             const examListJsonData = await chooseExamFetch.json();
             window.location.reload();
+            
          }
         if(!hasErrorRef.current){
             chooseExamAsync();
@@ -129,7 +131,7 @@ const UserExamMap = () => {
                                         <div class="accordion-body">
 
                                             <label>Choose Exam:</label>
-                                            {refListOfUnMappedExams.current.length === 0 ? <h6 className='text-warning text-center'>*no exams available to map user</h6> : refListOfUnMappedExams.current&&refListOfUnMappedExams.current.map((exam, index) => {
+                                            {refListOfUnMappedExams.current.length === 0 ? <h6 className='text-warning text-center'>*no exams available for mapping to the user.Go create exam and map</h6> : refListOfUnMappedExams.current&&refListOfUnMappedExams.current.map((exam, index) => {
                                                 return (
                                                     <div className='px-5'>
                                                         <input type='checkbox' name={`choose-exam-${index}`} value={exam.examId} /> <text>{exam.examName}</text>
@@ -158,4 +160,3 @@ const UserExamMap = () => {
 }
 
 export default UserExamMap
-	

@@ -13,8 +13,8 @@ const UpdateQuestion = () => {
   const [questionType, setQuestionType] = useState('')
   const [hasError, setHasError, refHasError] = useStateRef(false);
 
-  const[isAdmin,setIsAdmin]=useState(false)
-  const[message,setMessage]=useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     questionList();
@@ -38,7 +38,7 @@ const UpdateQuestion = () => {
 
   const questionList = () => {
     fetch(
-      `${uri}/onlineexamapplication/control/update-questionmaster?questionId=${questionId}&&topicId=${topicId}`, { credentials: "include" }
+      `${uri}/onlineexamapplication/control/update-question?questionId=${questionId}&&topicId=${topicId}`, { credentials: "include" }
     )
       .then((res) => res.json())
       .then((fetchdata) => {
@@ -206,7 +206,7 @@ const UpdateQuestion = () => {
     if (!refHasError.current) {
 
       fetch(
-        `${uri}/onlineexamapplication/control/update-questionmaster?questionId=${questionId}&&topicId=${topicId}`,
+        `${uri}/onlineexamapplication/control/update-question?questionId=${questionId}&&topicId=${topicId}`,
         {
           method: "POST",
           credentials: "include",
@@ -241,120 +241,228 @@ const UpdateQuestion = () => {
   }
   return (
     <>
-     <p
+      <p
         id="updatequestionadmincheck"
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
       ></p>
-      
+
       <WarningModal message={message} />
-    {isAdmin ?(<></>):(
-      <div className='container w-100% mt-5 offset-md-0'>
-        <div className='row'>
+      {isAdmin ? (<></>) : (
+        <div className='container w-100% mt-5 offset-md-0'>
+          <div className='row'>
 
-          {/*form starts hear  */}
+            {/*form starts hear  */}
 
-          <div className='col-sm-8 offset-md-3'>
-            <div className='card card  custom-bd-color mb-3 shadow-lg p-3 mb-5 bg-body rounded'>
-              <div className='card-header text-center questioncardheader'>
-                <h2>Update Question</h2>
-              </div>
+            <div className='col-sm-8 offset-md-3'>
+              <div className='card card  custom-bd-color mb-3 shadow-lg p-3 mb-5 bg-body rounded'>
+                <div className='card-header text-center questioncardheader'>
+                  <h2>Update Question</h2>
+                </div>
 
-              <div className='card-body '>
+                <div className='card-body '>
 
-                <form onSubmit={updateQuestion}>
+                  <form onSubmit={updateQuestion}>
 
-                  <div className="form-group">
-                    <lable >Question Detail</lable>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="questionDetail"
-                      name="questionDetail"
-                      placeholder="Enter The Options"
-                      defaultValue={data.questionDetail}
-                    ></input>
-                    <p
-                      className="d-none text-danger"
-                      id="validatingQuestionDetails"
-                    ></p>
-                  </div>
+                    <div className="form-group">
+                      <lable >Question Detail</lable>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="questionDetail"
+                        name="questionDetail"
+                        placeholder="Enter The Options"
+                        defaultValue={data.questionDetail}
+                      ></input>
+                      <p
+                        className="d-none text-danger"
+                        id="validatingQuestionDetails"
+                      ></p>
+                    </div>
 
-                  {/* multiple choice */}
-                  {questionType === "MultipleChoice" ?
+                    {/* multiple choice */}
+                    {questionType === "MultipleChoice" ?
 
-                    <div>
-                      <div className='form-group'>
-                        <lable>optionA</lable>
-                        <input type='text' className='form-control' name='optionA' id="option a" placeholder='Enter the options' defaultValue={data.optionA} ></input>
-                        <p
-                          className="d-none text-danger"
-                          id="validatingOptionA"
-                        ></p>
+                      <div>
+                        <div className='form-group'>
+                          <lable>optionA</lable>
+                          <input type='text' className='form-control' name='optionA' id="option a" placeholder='Enter the options' defaultValue={data.optionA} ></input>
+                          <p
+                            className="d-none text-danger"
+                            id="validatingOptionA"
+                          ></p>
 
-                      </div>
+                        </div>
 
-                      <div className="form-group">
-                        <lable >Option B</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option b"
-                          name="optionB"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionB}
-                        ></input>
-                        <p
-                          id="validatingOptionB"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-                      <div className="form-group">
-                        <lable>Option C</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option c"
-                          name="optionC"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionC}
-                        ></input>
-                        <p
-                          id="validatingOptionC"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-                      <div className="form-group">
-                        <lable >Option D</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option d"
-                          name="optionD"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionD}
-                        ></input>
-                        <p
-                          id="validatingOptionD"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
+                        <div className="form-group">
+                          <lable >Option B</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option b"
+                            name="optionB"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionB}
+                          ></input>
+                          <p
+                            id="validatingOptionB"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                        <div className="form-group">
+                          <lable>Option C</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option c"
+                            name="optionC"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionC}
+                          ></input>
+                          <p
+                            id="validatingOptionC"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                        <div className="form-group">
+                          <lable >Option D</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option d"
+                            name="optionD"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionD}
+                          ></input>
+                          <p
+                            id="validatingOptionD"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
 
-                      <div className="form-group">
-                        <lable >Option E</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option e"
-                          name="optionE"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionE}
-                        ></input>
-                        <p
-                          id="validatingOptionE"
-                          className="d-none text-danger"
-                        ></p>
+                        <div className="form-group">
+                          <lable >Option E</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option e"
+                            name="optionE"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionE}
+                          ></input>
+                          <p
+                            id="validatingOptionE"
+                            className="d-none text-danger"
+                          ></p>
 
+                          <div className="form-group">
+                            <lable > Answer</lable>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="answer"
+                              name="answer"
+                              placeholder="enter the answer"
+                              defaultValue={data.answer}
+                            />
+                            <p id="validatingAnswer" className="d-none text-danger"></p>
+                          </div>
+                        </div>
+                      </div> : <></>}
+
+
+                    {/* single choice */}
+                    {questionType === "SingleChoice" ?
+
+                      <div>
+                        <div className='form-group'>
+                          <lable>optionA</lable>
+                          <input type='text' className='form-control' name='optionA' id="option a" placeholder='Enter the options' defaultValue={data.optionA} ></input>
+                          <p
+                            className="d-none text-danger"
+                            id="validatingOptionA"
+                          ></p>
+
+                        </div>
+
+                        <div className="form-group">
+                          <lable >Option B</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option b"
+                            name="optionB"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionB}
+                          ></input>
+                          <p
+                            id="validatingOptionB"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                        <div className="form-group">
+                          <lable >Option C</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option c"
+                            name="optionC"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionC}
+                          ></input>
+                          <p
+                            id="validatingOptionC"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                        <div className="form-group">
+                          <lable >Option D</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option d"
+                            name="optionD"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionD}
+                          ></input>
+                          <p
+                            id="validatingOptionD"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+
+                        <div className="form-group">
+                          <lable >Option E</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="option e"
+                            name="optionE"
+                            placeholder="Enter The Options"
+                            defaultValue={data.optionE}
+                          ></input>
+                          <p
+                            id="validatingOptionE"
+                            className="d-none text-danger"
+                          ></p>
+
+                          <div className="form-group">
+                            <lable > Answer</lable>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="answer"
+                              name="answer"
+                              placeholder="enter the answer"
+                              defaultValue={data.answer}
+                            />
+                            <p id="validatingAnswer" className="d-none text-danger"></p>
+                          </div>
+                        </div>
+                      </div> : <></>}
+                    {/* Fill In The Blanks */}
+                    {questionType === "FillInTheBlanks" ?
+                      <div>
                         <div className="form-group">
                           <lable > Answer</lable>
                           <input
@@ -367,85 +475,11 @@ const UpdateQuestion = () => {
                           />
                           <p id="validatingAnswer" className="d-none text-danger"></p>
                         </div>
-                      </div>
-                    </div> : <></>}
+                      </div> : <></>}
 
-
-                  {/* single choice */}
-                  {questionType === "SingleChoice" ?
-
-                    <div>
-                      <div className='form-group'>
-                        <lable>optionA</lable>
-                        <input type='text' className='form-control' name='optionA' id="option a" placeholder='Enter the options' defaultValue={data.optionA} ></input>
-                        <p
-                          className="d-none text-danger"
-                          id="validatingOptionA"
-                        ></p>
-
-                      </div>
-
-                      <div className="form-group">
-                        <lable >Option B</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option b"
-                          name="optionB"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionB}
-                        ></input>
-                        <p
-                          id="validatingOptionB"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-                      <div className="form-group">
-                        <lable >Option C</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option c"
-                          name="optionC"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionC}
-                        ></input>
-                        <p
-                          id="validatingOptionC"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-                      <div className="form-group">
-                        <lable >Option D</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option d"
-                          name="optionD"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionD}
-                        ></input>
-                        <p
-                          id="validatingOptionD"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
-
-                      <div className="form-group">
-                        <lable >Option E</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="option e"
-                          name="optionE"
-                          placeholder="Enter The Options"
-                          defaultValue={data.optionE}
-                        ></input>
-                        <p
-                          id="validatingOptionE"
-                          className="d-none text-danger"
-                        ></p>
-
+                    {/* Detail Answers */}
+                    {questionType === "DetailedAnswers" ?
+                      <div>
                         <div className="form-group">
                           <lable > Answer</lable>
                           <input
@@ -458,150 +492,116 @@ const UpdateQuestion = () => {
                           />
                           <p id="validatingAnswer" className="d-none text-danger"></p>
                         </div>
-                      </div>
-                    </div> : <></>}
-                  {/* Fill In The Blanks */}
-                  {questionType === "FillInTheBlanks" ?
-                    <div>
-                      <div className="form-group">
-                        <lable > Answer</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="answer"
-                          name="answer"
-                          placeholder="enter the answer"
-                          defaultValue={data.answer}
-                        />
-                        <p id="validatingAnswer" className="d-none text-danger"></p>
-                      </div>
-                    </div> : <></>}
+                      </div> : <></>}
 
-                  {/* Detail Answers */}
-                  {questionType === "DetailedAnswers" ?
-                    <div>
-                      <div className="form-group">
-                        <lable > Answer</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="answer"
-                          name="answer"
-                          placeholder="enter the answer"
-                          defaultValue={data.answer}
-                        />
-                        <p id="validatingAnswer" className="d-none text-danger"></p>
-                      </div>
-                    </div> : <></>}
+                    {/* True Or False */}
+                    {questionType === "TrueOrFalse" ?
+                      <div>
+                        <div className='form-check'>
+                          <label className="form-check-label" >optionA</label>
+                          <input type='text' className="form-control" defaultValue={'True'} ></input>
 
-                  {/* True Or False */}
-                  {questionType === "TrueOrFalse" ?
-                    <div>
-                      <div className='form-check'>
-                        <label className="form-check-label" >optionA</label>
-                        <input type='text' className="form-control" defaultValue={'True'} ></input>
+                        </div>
+                        <div className='form-check'>
+                          <label className="form-check-label" >optionB</label>
+                          <input type='text' className="form-control" defaultValue={'false'}  ></input>
 
-                      </div>
-                      <div className='form-check'>
-                        <label className="form-check-label" >optionB</label>
-                        <input type='text' className="form-control" defaultValue={'false'}  ></input>
+                        </div>
+                        <div className="form-group">
+                          <lable > Answer</lable>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="answer"
+                            name="answer"
+                            placeholder="enter the answer"
+                            defaultValue={data.answer}
+                          />
+                          <p id="validatingAnswer" className="d-none text-danger"></p>
+                        </div>
+                      </div> : <></>}
 
-                      </div>
-                      <div className="form-group">
-                        <lable > Answer</lable>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="answer"
-                          name="answer"
-                          placeholder="enter the answer"
-                          defaultValue={data.answer}
-                        />
-                        <p id="validatingAnswer" className="d-none text-danger"></p>
-                      </div>
-                    </div> : <></>}
+                    <div className='form-group'>
+                      <lable >DifficultyLevel</lable>
+                      <input type='number' className='form-control' id='difficultylevel' name='difficultyLevel' min='0' defaultValue={data.dificultyLevel}></input>
 
-                  <div className='form-group'>
-                    <lable >DifficultyLevel</lable>
-                    <input type='number' className='form-control' id='difficultylevel' name='difficultyLevel' min='0' defaultValue={data.dificultyLevel}></input>
-
-                    <p id="validatingAnswer" className="d-none text-danger"></p>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-sm-5">
-                      <div className="form-group">
-                        <lable >Number Of Aswer</lable>
-                        <input
-                          type="number"
-                          className="form-control"
-                          id="numberofanswer"
-                          name="numAnswers"
-                          min='0'
-                          placeholder="numberofanswer"
-                          defaultValue={data.numAnswers}
-                        />
-                        <p
-                          id="validatingNumberofanswer"
-                          className="d-none text-danger"
-                        ></p>
-                      </div>
+                      <p id="validatingAnswer" className="d-none text-danger"></p>
                     </div>
 
-                    <div className="col-sm-5 offset-md-2">
-                      <div className="form-group">
-                        <lable >Answer Value</lable>
-                        <input
-                          type="number"
-                          className="form-control"
-                          id="answervalue"
-                          name="answerValue"
-                          min='0'
-                          placeholder="numberofanswer"
-                          defaultValue={data.answerValue}
-                        />
-                        <p
-                          id="validatingAnswervalue"
-                          className="d-none text-danger"
-                        ></p>
+                    <div className="row">
+                      <div className="col-sm-5">
+                        <div className="form-group">
+                          <lable >Number Of Aswer</lable>
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="numberofanswer"
+                            name="numAnswers"
+                            min='0'
+                            placeholder="numberofanswer"
+                            defaultValue={data.numAnswers}
+                          />
+                          <p
+                            id="validatingNumberofanswer"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
+                      </div>
+
+                      <div className="col-sm-5 offset-md-2">
+                        <div className="form-group">
+                          <lable >Answer Value</lable>
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="answervalue"
+                            name="answerValue"
+                            min='0'
+                            placeholder="numberofanswer"
+                            defaultValue={data.answerValue}
+                          />
+                          <p
+                            id="validatingAnswervalue"
+                            className="d-none text-danger"
+                          ></p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="">
-                    <lable>Negative Mark Value</lable>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="negativemarkvalue"
-                      name="negativeMarkValue"
-                      min='0'
-                      placeholder="negativemarkvalue"
-                      defaultValue={data.negativeMarkValue}
-                    />
-                    <p
-                      className="d-none text-danger"
-                      id="validatingNegativemarkvalue"
-                    ></p>
-                  </div>
+                    <div className="">
+                      <lable>Negative Mark Value</lable>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="negativemarkvalue"
+                        name="negativeMarkValue"
+                        min='0'
+                        placeholder="negativemarkvalue"
+                        defaultValue={data.negativeMarkValue}
+                      />
+                      <p
+                        className="d-none text-danger"
+                        id="validatingNegativemarkvalue"
+                      ></p>
+                    </div>
 
 
-                  <div className="text-center mt-3">
-                    <button className="btn btn-success offset-md-1" type="submit">
-                      Submit
-                    </button>
+                    <div className="text-center mt-3">
+                      <button className="btn btn-success offset-md-1" type="submit">
+                        Submit
+                      </button>
 
-                    <a href={`view-question?topicId=${topicId}`}> <button type='button' className="btn btn-warning offset-md-1">ViewQuestion</button></a>
-                  </div>
+                      <a href={`view-question?topicId=${topicId}`}> <button type='button' className="btn btn-warning offset-md-1">ViewQuestion</button></a>
+                    </div>
 
-                </form>
+                  </form>
 
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-        )}
+      )}
     </>
   );
 };
