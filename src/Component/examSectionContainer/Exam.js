@@ -35,7 +35,7 @@ const Exam = ({ exam }) => {
       }
       const deleteExamResult = await deleteExamFetch.json();
       console.log(deleteExamResult);
-      window.location.reload();
+      // window.location.reload();
 
     }
     catch (error) {

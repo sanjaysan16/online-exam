@@ -42,7 +42,7 @@ under the License.
        <description>createQuestionMaster</description>
        <auto-attributes include="pk" mode="OUT" optional="true"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-       <override name="questionDetail" optional="true"/> 
+       <override name="questionDetail" optional="true"/>
 </service>
            <service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
            <description>createQuestionMaster</description>

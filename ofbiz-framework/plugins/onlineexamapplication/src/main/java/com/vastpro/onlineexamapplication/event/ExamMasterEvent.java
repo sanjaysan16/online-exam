@@ -232,9 +232,39 @@ public class ExamMasterEvent {
 							}
 						}
 					}
-					dispatcher.runSync("deleteExam",
-							UtilMisc.toMap(OnlineExam.EXAM_ID, examId, OnlineExam.USERLOGIN, userLogin));
-					request.setAttribute("_EVENT_MESSAGE", "Exam deleted succesfully.");
+					
+					List <GenericValue>examUserMappedList=EntityQuery.use(delegator).from("UserExamMappingMaster").where(OnlineExam.EXAM_ID,examId).cache().queryList();
+					Map<String,Object> result=null;
+					if(examUserMappedList.size()>0) {
+						
+						for(GenericValue examUserList:examUserMappedList) {
+							String partyId=(String) examUserList.get("partyId");
+							System.out.println("=======partyId====="+partyId+"======================");
+							 result=dispatcher.runSync("deleteUserExamMapping", UtilMisc.toMap(OnlineExam.EXAM_ID, examId, "partyId",partyId,OnlineExam.USERLOGIN, userLogin));
+							
+							
+						}
+						
+						if(ServiceUtil.isSuccess(result)) {
+							
+							Map<String,Object> result2=	dispatcher.runSync("deleteExam",
+									UtilMisc.toMap(OnlineExam.EXAM_ID, examId, OnlineExam.USERLOGIN, userLogin));
+							System.out.println("========================="+result2+"");
+							if(ServiceUtil.isSuccess(result2)) {request.setAttribute("_EVENT_MESSAGE", "Exam deleted succesfully.");}
+	
+						}
+						else {
+							
+							request.setAttribute("message", "error :: cant delete exam user mapping");
+							return OnlineExam.ERROR;
+						}
+					}else {
+						dispatcher.runSync("deleteExam",
+								UtilMisc.toMap(OnlineExam.EXAM_ID, examId, OnlineExam.USERLOGIN, userLogin));
+						request.setAttribute("_EVENT_MESSAGE", "Exam deleted succesfully.");
+						return OnlineExam.SUCCESS;
+						
+					}
 					return OnlineExam.SUCCESS;
 				} else {
 					String errMsg = "unable to find exam from Exam entity";
@@ -252,9 +282,7 @@ public class ExamMasterEvent {
 			return OnlineExam.ERROR;
 		}
 
-	}
-
-	/**
+	}	/**
 	 * getExamOrExamList
 	 * 
 	 * @param request

@@ -174,6 +174,7 @@ function AddQuestion() {
     const formData = new FormData(e.target);
 
     const answers = Object.fromEntries(formData.entries());
+    console.log("thisssssssssssssssssss")
     Object.entries(answers).map(([key, value]) => {
       validatingAnswers(key, value);
 
@@ -198,6 +199,7 @@ function AddQuestion() {
           }
         );
         const data = await res.json();
+        console.log("data",data)
         if (data.result == "success") {
           Swal.fire({
             title: "Submited",

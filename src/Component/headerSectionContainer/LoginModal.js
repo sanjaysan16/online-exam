@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import useStateRef from "react-usestateref";
 import { port, protocol } from "../fetchConst";
-import 'fa-icons';
+// import 'fa-icons';
 const LoginModal = () => {
   const [hasErrorRef, setHasError, refHasError] = useStateRef(false);
 

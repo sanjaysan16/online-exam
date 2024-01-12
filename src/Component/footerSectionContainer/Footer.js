@@ -10,9 +10,7 @@ const Footer = () => {
           <ul style={{ "list-style-type": "none" }}>
             <li className=''>Instagram</li>
             <li className=''>FaceBook</li>
-            <li className=''>Twitter</li>
-            <li className=''>WhatsApp</li>
-            <li className=''>Telegram</li>
+           
           </ul>
         </div>
         <div className='col-sm-2'>
@@ -20,9 +18,7 @@ const Footer = () => {
           <ul style={{ "list-style-type": "none" }}>
             <li className=''>Instagram</li>
             <li className=''>FaceBook</li>
-            <li className=''>Twitter</li>
-            <li className=''>WhatsApp</li>
-            <li className=''>Telegram</li>
+   
           </ul>
         </div>
         <div className='col-sm-2'>
@@ -30,9 +26,7 @@ const Footer = () => {
           <ul style={{ "list-style-type": "none" }}>
             <li className=''>Instagram</li>
             <li className=''>FaceBook</li>
-            <li className=''>Twitter</li>
-            <li className=''>WhatsApp</li>
-            <li className=''>Telegram</li>
+       
           </ul>
         </div>
         <div className='col-sm-2'>
@@ -40,9 +34,7 @@ const Footer = () => {
           <ul style={{ "list-style-type": "none" }}>
             <li className=''>Instagram</li>
             <li className=''>FaceBook</li>
-            <li className=''>Twitter</li>
-            <li className=''>WhatsApp</li>
-            <li className=''>Telegram</li>
+         
           </ul>
         </div>
         <div className='col-sm-2'>
@@ -50,9 +42,7 @@ const Footer = () => {
           <ul style={{ "list-style-type": "none" }}>
             <li className=''>Instagram</li>
             <li className=''>FaceBook</li>
-            <li className=''>Twitter</li>
-            <li className=''>WhatsApp</li>
-            <li className=''>Telegram</li>
+       
           </ul>
         </div>
       </footer>

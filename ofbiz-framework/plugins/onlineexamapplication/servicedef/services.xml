@@ -49,22 +49,6 @@ under the License.
        <auto-attributes include="pk" mode="IN" optional="false"/>   
     </service>
     
-   <service name="createQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
-       <description>createQuestionMaster</description>
-       <auto-attributes include="pk" mode="OUT" optional="true"/>
-       <auto-attributes include="nonpk" mode="IN" optional="true"/>
-       <override name="questionDetail" optional="true"/>
-    </service>
-
-	<service name="createNewQuestionService"
-		default-entity-name="QuestionMaster" engine="entity-auto"
-		invoke="create" auth="false">
-		<description>createQuestionMaster</description>
-		<auto-attributes include="pk" mode="OUT"
-			optional="true" />
-		<auto-attributes include="nonpk" mode="IN"
-			optional="true" />
-	</service>
 
     <service name='DeleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
     <auto-attributes include='pk' mode='IN' optional='false'/>
@@ -75,6 +59,7 @@ under the License.
        <auto-attributes include="pk" mode="IN" optional="false"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/> 
     </service>
+    
     <!--topic services-->
     <service name="createTopicMaster" default-entity-name="TopicMaster" engine="entity-auto" invoke="create" auth="false">
        <description>create Exam</description>
@@ -136,6 +121,14 @@ under the License.
        <auto-attributes include="pk" mode="IN" optional="false"/>
        <auto-attributes include="nonpk" mode="IN" optional="false"/> 
     </service>
+    
+    <service name="deleteUserExamMapping"
+		default-entity-name="UserExamMappingMaster" engine="entity-auto"
+		invoke="delete" auth="false">
+   <auto-attributes include='pk' mode='IN'
+			optional='false' />
+		
+	</service>
 
 </services>
  

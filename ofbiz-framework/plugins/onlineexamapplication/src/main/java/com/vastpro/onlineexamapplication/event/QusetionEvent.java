@@ -1,6 +1,7 @@
 package com.vastpro.onlineexamapplication.event;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -34,15 +35,45 @@ public class QusetionEvent {
 		GenericValue questionDetailCheck;
 
 		String result = "";
+		GenericValue totalQuestionPerTopic = null;
+		List<GenericValue> numOfQuestionAdded = new ArrayList<GenericValue>();
+		Long questionsPerTopic = null;
 
 		Map<String, Object> fields = UtilHttp.getCombinedMap(request);
 
 		String topicId = (String) fields.get(OnlineExam.TOPIC_ID);
+   
+		try {
+			totalQuestionPerTopic = EntityQuery.use(delegator).from("ExamTopicMappingMaster")
+					.where(OnlineExam.TOPIC_ID, topicId).cache().queryOne();
+			questionsPerTopic = (Long) totalQuestionPerTopic.get("questionsPerExam");
+			
+			if (UtilValidate.isNotEmpty(totalQuestionPerTopic)) {
+
+				numOfQuestionAdded = EntityQuery.use(delegator).from("QuestionMaster")
+						.where(OnlineExam.TOPIC_ID, topicId).queryList();
+			}else {
+				 String errMsg="topic id is not present in db";
+		           request.setAttribute("errMsg", errMsg);
+		           return OnlineExam.ERROR;
+			}
+		} catch (GenericEntityException e1) {
+			String error = "Error While querying to get totalQuestionPerTopic " + e1.toString();
+			request.setAttribute("error", error);
+		}
+
+		if (numOfQuestionAdded.size() >= questionsPerTopic) {
+			
+           String errMsg="You Can't add more questions for this topic";
+           result="overfull";
+           request.setAttribute("result", result);
+           request.setAttribute("errMsg", errMsg);
+           return OnlineExam.ERROR;
+		}
+		
 		String questionDetail = (String) fields.get(OnlineExam.QUESTION_DETAIL);
 
 		try {
-			
-			
 			questionDetailCheck = EntityQuery.use(delegator).from(OnlineExam.Question_Master)
 					.where(OnlineExam.QUESTION_DETAIL, questionDetail).cache().queryOne();
 
@@ -70,7 +101,6 @@ public class QusetionEvent {
 					Map<String, Object> result2 = null;
 
 					try {
-
 						result2 = dispatcher.runSync("createNewQuestionService",
 								UtilMisc.toMap(OnlineExam.QUESTION_DETAIL, questionDetail, OnlineExam.OPTION_A, optionA,
 										OnlineExam.OPTION_B, optionB, OnlineExam.OPTION_C, optionC, OnlineExam.OPTION_D,
@@ -113,11 +143,57 @@ public class QusetionEvent {
 			request.setAttribute("ERROR", errMsg);
 			return OnlineExam.ERROR;
 		}
+		String errMsg = "service problem";
+		request.setAttribute("eventMsg", errMsg);
 		return OnlineExam.ERROR;
 
 	}
+	
+	
+	public static String getQuestionDetailForUpdate(HttpServletRequest request, HttpServletResponse response) {
+		
+		
+		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
+		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
+
+		GenericValue questionNullCheck = null;
+		String errMsg =null;
+		String result = "";
+		Map<String, Object> fields = UtilHttp.getCombinedMap(request);
+
+		Long questionId = Long.parseLong((String) fields.get(OnlineExam.QUESTION_ID));
+		
+		if(UtilValidate.isNotEmpty(questionId)) {
+
+			try {
+				
+				questionNullCheck = EntityQuery.use(delegator).from(OnlineExam.Question_Master)
+						.where(OnlineExam.QUESTION_ID, questionId).cache().queryFirst();
+				if(UtilValidate.isNotEmpty(questionNullCheck)) {
+					request.setAttribute("questionNullCheck", questionNullCheck);
+
+				}else {
+					errMsg="thare is no question like this with this id ::"+questionId;
+					request.setAttribute("ERROR_MESSAGE", errMsg);
+				}
+
+			} catch (GenericEntityException e1) {
+				 errMsg = "error while querying entity: =   " + e1.toString();
+				request.setAttribute("ERROR_MESSAGE", errMsg);
+			}
+		} 
+		
+		errMsg="questionId is getting as null in getQuestionDetailForUpdate method";
+		request.setAttribute("ERROR_MESSAGE", errMsg);
+		
+		return OnlineExam.ERROR;
+		
+	}
 
 	// Update Question Method......
+	
+	
 
 	public static String updateExistingQuestion(HttpServletRequest request, HttpServletResponse response) {
 
@@ -133,15 +209,7 @@ public class QusetionEvent {
 		Long questionId = Long.parseLong((String) fields.get(OnlineExam.QUESTION_ID));
 
 		if (UtilValidate.isNotEmpty(questionId)) {
-			try {
-				questionNullCheck = EntityQuery.use(delegator).from(OnlineExam.Question_Master)
-						.where(OnlineExam.QUESTION_ID, questionId).cache().queryFirst();
-				request.setAttribute("questionNullCheck", questionNullCheck);
-
-			} catch (GenericEntityException e1) {
-				String errMsg = "error while querying entity: =   " + e1.toString();
-				request.setAttribute("ERROR_MESSAGE", errMsg);
-			}
+			
 
 			String questionDetail = (String) fields.get(OnlineExam.QUESTION_DETAIL);
 
@@ -163,6 +231,7 @@ public class QusetionEvent {
 			String answerValue = (String) fields.get(OnlineExam.ANSWER_VALUE);
 			String topicId = (String) fields.get(OnlineExam.TOPIC_ID);
 			String negativeMarkValue = (String) fields.get(OnlineExam.NEGATIVE_MARK_VALUE);
+			
 
 			if (UtilValidate.isNotEmpty(topicId) || UtilValidate.isNotEmpty(optionA) || UtilValidate.isNotEmpty(optionB)
 					|| UtilValidate.isNotEmpty(optionC) || UtilValidate.isNotEmpty(optionD)
@@ -250,7 +319,6 @@ public class QusetionEvent {
 
 	public static String deleteQuestion(HttpServletRequest request, HttpServletResponse response) {
 
-		
 		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
 		GenericValue userLogin = (GenericValue) request.getAttribute(OnlineExam.USERLOGIN);
