@@ -78,13 +78,8 @@ public class UserExamList {
 			request.setAttribute("EVENT_MESSAGE", errMsg);
 			return OnlineExam.ERROR;
 			
-		}
-		
-		
-	
-		
-		return OnlineExam.SUCCESS;
-		
+		}	
+		return OnlineExam.SUCCESS;	
 	}
 	
 	public static String topicQuestionList(HttpServletRequest request,HttpServletResponse response) {

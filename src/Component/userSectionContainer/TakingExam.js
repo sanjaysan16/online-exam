@@ -92,6 +92,7 @@ const TakingExam = () => {
     setCurrentQuestion(refListOfQuestionsOfTopic.current[refIndex.current]);
     setQuestionType(refCurrentQuestion.current.questionType)
   }
+  
   return (
     <div className='d-flex'>
       <div className='col-sm-3 flex-column min-vh-auto p-3 text-dark z-3 border boder-dark shadow'>

@@ -8,6 +8,7 @@ public interface OnlineExam {
 	public static final String DISPATCHER = "dispatcher";
 	public static final String USERLOGIN = "userLogin";
 	public static final String NULL = null;
+	String PARTY_ID="partyId";
 	
 	
 	public static final String Exam_Master="ExamMaster";
@@ -62,7 +63,6 @@ public interface OnlineExam {
 	//USEREXAMMAPPING 
 	String ALLOWED_ATTEMPTS="1";
 	String NO_OF_ATTEMPTS="0";
-	String LAST_PERFORMANCE_DATE="2024-01-03 22:22:00.0";
 	String TIMEOUT_DAYS="30";
 	String PASSWORD_CHANGES_AUTO="Y";
 	String CAN_SPLIT_EXAMS="Y";

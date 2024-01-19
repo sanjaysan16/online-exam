@@ -18,10 +18,6 @@
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
 
-
-
-
-
     <form name="FindOfbizDemo" type="single" target="FindOfbizDemo" default-entity-name="OfbizDemo">
     <field name="noConditionFind"><hidden value="Y"/> <!-- if this isn't there then with all fields empty no query will be done --></field>
     <field name="ofbizDemoId" title="${uiLabelMap.OfbizDemoId}"><text-find/></field>

@@ -122,13 +122,21 @@ under the License.
        <auto-attributes include="nonpk" mode="IN" optional="false"/> 
     </service>
     
-    <service name="deleteUserExamMapping"
-		default-entity-name="UserExamMappingMaster" engine="entity-auto"
-		invoke="delete" auth="false">
-   <auto-attributes include='pk' mode='IN'
-			optional='false' />
-		
+    <service name="deleteUserExamMapping" default-entity-name="UserExamMappingMaster" engine="entity-auto" invoke="delete" auth="false">
+      <auto-attributes include='pk' mode='IN' optional='false' />
 	</service>
-
+		
+	<service name="createUserAttempt" default-entity-name="UserAttemptMaster" engine="entity-auto" invoke="create" auth="true">
+       <description>create UserExamMapping</description>
+       <auto-attributes include="pk" mode="OUT" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/> 
+    </service>
+    
+    <service name="user-attempt-topic-master" default-entity-name="UserAttemptTopicMaster" engine="entity-auto" invoke="create" auth="false">
+       <description>create performanceId</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/> 
+    </service>
+	
 </services>
  

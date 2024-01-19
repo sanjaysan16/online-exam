@@ -235,7 +235,6 @@ under the License.
      <request-map uri="get-list-of-user-exam-mapping">
 	    <security https="true" auth="false"/>
 	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="getListOfUserExamMapping"/>
-
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>
     </request-map>
@@ -263,14 +262,27 @@ under the License.
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
     
-    <request-map uri="get-questions-list">
+    <request-map uri="get-performanceId">
     	<security https="true" auth="false"/>
-    	<event type="java" path="com.vastpro.onlineexamapplication.event.UserExamList" invoke="topicQuestionList"/>
+    	<event type="java" path="com.vastpro.onlineexamapplication.event.GetPerformanceId" invoke="getPerformanceId"/>
 	    <response name="success" type="request" value="json"/>
 	    <response name="error" type="request" value="json"/>	    
     </request-map>
     
-
+    <request-map uri="get-user-exam-mapping">
+    	<security https="true" auth="false"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="getUserExamMapping"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>	    
+    </request-map>
+    
+    <request-map uri="get-or-create-user-attempt">
+    	<security https="true" auth="false"/>
+	    <event type="java" path="com.vastpro.onlineexamapplication.event.UserEvent" invoke="getOrCreateUserAttempt"/>
+	    <response name="success" type="request" value="json"/>
+	    <response name="error" type="request" value="json"/>	    
+    </request-map>
+    
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://onlineexamapplication/widget/OnlineexamapplicationScreens.xml#main"/>
 

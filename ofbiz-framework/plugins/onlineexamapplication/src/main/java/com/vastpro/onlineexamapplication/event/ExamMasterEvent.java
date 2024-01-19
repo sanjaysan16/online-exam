@@ -148,11 +148,6 @@ public class ExamMasterEvent {
 		String answersMust = (String) request.getAttribute("answersMust");
 		String enableNegativeMark = (String) request.getAttribute("enableNegativeMark");
 		String negativeMarkValue = (String) request.getAttribute("negativeMarkValue");
-		System.out.println(".............................");
-		System.out.println(".............................");
-		System.out.println(".............................");
-		System.out.println(enableNegativeMark);
-		System.out.println(negativeMarkValue);
 
 		try {
 			Debug.logInfo("=======Updating Exam record in event using service updateExam=========", module);
