@@ -43,16 +43,20 @@ const Exam = ({ exam }) => {
     }
   }
 
+  const result = (examId)=>{
+    navigate(`/result-page-for-admin?examId=${examId}`);
+    window.location.reload();
+  }
+
   return (
     <div className='border bg-light rounded'>
       <div style={{ "float": "left" }} className='p-5'>
         <h4>{exam.examName}</h4>
       </div>
+      <button className='btn-outline-success btn p-2 mx-3 my-5' type="button" data-toggle="tooltip" data-placement="bottom" title="Result" style={{ "float": "right" }} onClick={() => result(exam.examId)}> Result</button>
       <button className="btn-outline-primary p-2 btn mx-3 my-5" type="button" data-toggle="tooltip" data-placement="bottom" title="EditExam" style={{ "float": "right" }} onClick={() => editExam(exam.examId)}> EditExam</button>
       <button className="btn-outline-danger p-2 btn mx-3 my-5" type="button" data-toggle="tooltip" data-placement="bottom" title="DeleteExam" style={{ "float": "right" }} onClick={() => deleteExam(exam.examId)}>DeleteExam</button>
       <button className='btn-outline-success btn p-2 mx-3 my-5' type="button" data-toggle="tooltip" data-placement="bottom" title="GoTopic" style={{ "float": "right" }} onClick={() => goTopic(exam.examId, exam.examName)}> GoTopic</button>
-
-
     </div>
   )
 }

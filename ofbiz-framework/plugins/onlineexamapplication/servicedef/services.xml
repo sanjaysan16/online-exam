@@ -99,11 +99,11 @@ under the License.
     	<auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     
-    <service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
+    <!-- <service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
            <description>createQuestionMaster</description>
        <auto-attributes include="pk" mode="OUT" optional="true"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-           </service>
+     </service> -->
            
             <service name='deleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
     <auto-attributes include='pk' mode='IN' optional='false'/>

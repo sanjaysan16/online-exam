@@ -5,7 +5,6 @@ import { port, protocol } from '../fetchConst';
 const TakingExam = () => {
   const [examName, setExamName] = useState();
   const [username, setUserName] = useState();
-
   const [listOfQuestionsOfTopic, setListOfQuestionsOfTopic, refListOfQuestionsOfTopic] = useStateRef();
   const [currentQuestion, setCurrentQuestion, refCurrentQuestion] = useStateRef();
   const [questionLengthOfTopic, setQuestionLengthOfTopic, refQuestionLengthOfTopic] = useStateRef();
@@ -22,12 +21,16 @@ const TakingExam = () => {
 
   const [questionType, setQuestionType, refQuestionType] = useStateRef();
   const [count, setCount] = useState();
-  const [countDown, setCountDown] = useState()
+  const [countDown, setCountDown] = useState(count)
   const timerId = useRef()
+
+
+
+
   useEffect(() => {
     timerId.current = setInterval(() => {
       setCountDown(prev => prev - 1)
-    }, 60000)
+    }, 1000)
     return () => clearInterval(timerId.current)
   }, [])
   useEffect(() => {
@@ -42,7 +45,18 @@ const TakingExam = () => {
   const examId = urlParams.get('examId')
   useEffect(() => {
     getTopics()
+    // performanceId()
   }, [])
+
+
+  // const performanceId = () => {
+  //   fetch(`${uri}/onlineexamapplication/control/get-performanceId?partyId=${partyId}&examId=${examId}`,
+  //     { credentials: "include" })
+  //     .then((response) => response.json())
+  //     .then(data => {
+  //       console.log(data)
+  //     })
+  // }
 
   const getTopics = () => {
     fetch(`${uri}/onlineexamapplication/control/get-topics-of-exam?examId=${examId}`,
@@ -52,6 +66,7 @@ const TakingExam = () => {
         console.log(data)
         setExamName(data.examName);
         setUserName(data.username);
+        //setPartyId(data.partyId);
         setTopicList(data.topicAndQuestionForExam)
         setDefaultTopic(refTopicList.current[0]);
         setCurrentTopicName(Object.keys(refDefaultTopic.current));

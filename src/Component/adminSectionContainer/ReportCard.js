@@ -4,30 +4,40 @@ import { port, protocol } from "../fetchConst";
 import Result from "../userSectionContainer/Result";
 
 const ReportCard = () => {
-  const [examList, setexamList] = useState([]);
+  const [examList, setExamList] = useState([]);
   const [name, setName] = useState()
   //const [examName, setExamName] = useState()
 
   const uri = `${protocol}://${window.location.hostname}:${port}`;
 
   useEffect(() => {
-    getExams();
+    getUserExamMappingList();
+    // adminOrUserCheck();
   }, []);
-
-  function getExams() {
-    fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-
-        setexamList(data.Exam_List);
-
-        //setExamName(data.Exam_List.examName)
-
-
-      })
-      .catch((error) => console.error("Error:", error));
+  const getUserExamMappingList = async () => {
+    const userExamMappedFetch = await fetch('https://localhost:8443/onlineexamapplication/control/get-list-of-user-exam-mapping', {
+      credentials: 'include'
+    });
+    const userExamMappedList = await userExamMappedFetch.json();
+    console.log(userExamMappedFetch);
+    setExamList(userExamMappedList.mappedAndUnMappedExams.listOfMappedExams);
   }
+
+
+  // useEffect(() => {
+  //   getExams();
+  // }, []);
+
+  // function getExams() {
+  //   fetch(`${uri}/onlineexamapplication/control/get-exam-or-exam-list`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+
+  //       setexamList(data.Exam_List);
+  //     })
+  //     .catch((error) => console.error("Error:", error));
+  // }
   useEffect(() => {
     getName()
   }, []);
@@ -75,7 +85,7 @@ const ReportCard = () => {
                           result
                         </button>
                       </a>
-                      
+
                     </li>
                   </ul>
                 </div>

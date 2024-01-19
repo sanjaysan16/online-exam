@@ -25,7 +25,6 @@ const AllotedExamsToUser = ({ exam }) => {
     console.log("getOrCreateUserAttempt", getOrCreateUserAttempt)
 
     if (getOrCreateUserAttempt.Event === "success") {
-      
       navigate(`/exam-instruction?examId=${exam.examId}`)   
     } else {
       if (getOrCreateUserAttempt.Event === "attemptLimitReachecd") {
