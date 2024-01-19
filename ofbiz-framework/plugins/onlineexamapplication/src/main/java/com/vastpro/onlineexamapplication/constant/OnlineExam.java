@@ -9,7 +9,7 @@ public interface OnlineExam {
 	public static final String USERLOGIN = "userLogin";
 	public static final String NULL = null;
 	
-	
+	String PARTY_ID="partyId";
 	public static final String Exam_Master="ExamMaster";
 	public static final String Question_Master="QuestionMaster";
 	public static final String Topic_Master="TopicMaster";

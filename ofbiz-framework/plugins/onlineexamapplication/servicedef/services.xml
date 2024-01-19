@@ -49,21 +49,17 @@ under the License.
        <auto-attributes include="pk" mode="IN" optional="false"/>   
     </service>
     
-   <service name="createQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
+   <!-- <service name="createQuestionMaster" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
        <description>createQuestionMaster</description>
        <auto-attributes include="pk" mode="OUT" optional="true"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/>
        <override name="questionDetail" optional="true"/>
-    </service>
+    </service> -->
 
-	<service name="createNewQuestionService"
-		default-entity-name="QuestionMaster" engine="entity-auto"
-		invoke="create" auth="false">
+	<service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
 		<description>createQuestionMaster</description>
-		<auto-attributes include="pk" mode="OUT"
-			optional="true" />
-		<auto-attributes include="nonpk" mode="IN"
-			optional="true" />
+		<auto-attributes include="pk" mode="OUT" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
 	</service>
 
     <service name='DeleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
@@ -114,11 +110,11 @@ under the License.
     	<auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     
-    <service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
+    <!-- <service name="createNewQuestionService" default-entity-name="QuestionMaster" engine="entity-auto" invoke="create" auth="false">
            <description>createQuestionMaster</description>
        <auto-attributes include="pk" mode="OUT" optional="true"/>
        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-           </service>
+     </service> -->
            
             <service name='deleteQuestionService' default-entity-name='QuestionMaster' engine='entity-auto' invoke='delete' auth='false'>
     <auto-attributes include='pk' mode='IN' optional='false'/>
@@ -135,6 +131,18 @@ under the License.
        <description>create UserExamMapping</description>
        <auto-attributes include="pk" mode="IN" optional="false"/>
        <auto-attributes include="nonpk" mode="IN" optional="false"/> 
+    </service>
+    
+    <service name="getPerformanceId" default-entity-name="UserAttemptMaster" engine="entity-auto" invoke="create" auth="false">
+       <description>get performanceId</description>
+       <auto-attributes include="pk" mode="OUT" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/> 
+    </service>
+    
+    <service name="user-attempt-topic-master" default-entity-name="UserAttemptTopicMaster" engine="entity-auto" invoke="create" auth="false">
+       <description>create performanceId</description>
+       <auto-attributes include="pk" mode="IN" optional="false"/>
+       <auto-attributes include="nonpk" mode="IN" optional="true"/> 
     </service>
 
 </services>

@@ -94,86 +94,110 @@ public class TopicEvent {
 				} catch (GenericEntityException e1) {
 					Debug.logInfo(e1.getMessage(), module);
 				}
-				/*
-				 * here we create the topicMaster and examTopicMappingMaster 
-				 */
-				int topicPercentageInInt=Integer.parseInt(percentage);
-				if(topicId.isEmpty()) {
-					
 				
-				if(topicPercentageInInt<=remainingPercentage) {
-					int topicPercentageCaluclation=(int) (topicPercentageInInt*noOfQuestions);
-					int finalTopicPercentage=topicPercentageCaluclation/100;
-				try {
-					Map<String, Object> createTopic = dispatcher.runSync("createTopicMaster", UtilMisc.toMap("topicName",topicName,"percentage",percentage,"topicPassPercentage",topicPassPercentage));
-					System.out.println("this is the result of createTopicMaster :"+createTopic);
-					if(ServiceUtil.isSuccess(createTopic)) {
-						String topicIdFromEntity=(String)createTopic.get("topicId");
-						if(UtilValidate.isNotEmpty(topicIdFromEntity)) {
-							Map<String, Object> createExamTopicMapping = dispatcher.runSync("examTopicMapping", UtilMisc.toMap("examId",examId,"topicId",topicIdFromEntity,"percentage",percentage,"topicPassPercentage",topicPassPercentage,"questionsPerExam",finalTopicPercentage));
-							System.out.println("this is the result of createExamTopicMapping :"+createExamTopicMapping);
-							if(ServiceUtil.isSuccess(createExamTopicMapping)) {
-								request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping created successfully");
+				if(UtilValidate.isNotEmpty(topicName)) {
+					try {
+						GenericValue checkingTopicName=EntityQuery.use(delegator).from("TopicMaster").where("topicName",topicName).cache().queryOne();
+						if(UtilValidate.isEmpty(checkingTopicName)) {
+							
+						
+						/*
+						 * here we create the topicMaster and examTopicMappingMaster 
+						 */
+						int topicPercentageInInt=Integer.parseInt(percentage);
+						if(topicId.isEmpty()) {
+							
+						
+						if(topicPercentageInInt<=remainingPercentage) {
+							int topicPercentageCaluclation=(int) (topicPercentageInInt*noOfQuestions);
+							int finalTopicPercentage=topicPercentageCaluclation/100;
+						try {
+							Map<String, Object> createTopic = dispatcher.runSync("createTopicMaster", UtilMisc.toMap("topicName",topicName,"percentage",percentage,"topicPassPercentage",topicPassPercentage));
+							System.out.println("this is the result of createTopicMaster :"+createTopic);
+							if(ServiceUtil.isSuccess(createTopic)) {
+								String topicIdFromEntity=(String)createTopic.get("topicId");
+								if(UtilValidate.isNotEmpty(topicIdFromEntity)) {
+									Map<String, Object> createExamTopicMapping = dispatcher.runSync("examTopicMapping", UtilMisc.toMap("examId",examId,"topicId",topicIdFromEntity,"percentage",percentage,"topicPassPercentage",topicPassPercentage,"questionsPerExam",finalTopicPercentage));
+									System.out.println("this is the result of createExamTopicMapping :"+createExamTopicMapping);
+									if(ServiceUtil.isSuccess(createExamTopicMapping)) {
+										request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping created successfully");
+									}
+								}else {
+									String errMsg="topic id is empty from entity topic master while creation";
+									request.setAttribute("EVENT_MESSAGE", errMsg);
+									return OnlineExam.ERROR;
+								}
 							}
+						} catch (GenericServiceException e) {
+							Debug.logError(e.getMessage(), module);
+						}
 						}else {
-							String errMsg="topic id is empty from entity topic master while creation";
+							String errMsg="you can't create the topic because the remaining topicPercentage is : "+remainingPercentage;
 							request.setAttribute("EVENT_MESSAGE", errMsg);
 							return OnlineExam.ERROR;
 						}
-					}
-				} catch (GenericServiceException e) {
-					Debug.logError(e.getMessage(), module);
-				}
-				}else {
-					String errMsg="you can't create the topic because the remaining topicPercentage is : "+remainingPercentage;
-					request.setAttribute("EVENT_MESSAGE", errMsg);
-					return OnlineExam.ERROR;
-				}
-				request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping created successfully");
-				}
-				/*
-				 * edit topic and examTopicMapping
-				 */
-					if(UtilValidate.isNotEmpty(topicId) && UtilValidate.isNotEmpty(examId)) {
-						try {
-							GenericValue topicInExamTopicMapping=EntityQuery.use(delegator).from("ExamTopicMappingMaster").where("examId",examId,"topicId",topicId).cache().queryOne();
-							BigDecimal topicPercentageForEdit=(BigDecimal)topicInExamTopicMapping.get("percentage");
-							int topicPercentageForEditInInt=topicPercentageForEdit.intValue();
-							Debug.logInfo("this is the percentage from entity" + topicPercentageForEditInInt,module);
-							Debug.logInfo("this is the value of the totalPercentage" + totalPercentage,module);
-							int remainingPercentageForEdit=totalPercentage-topicPercentageForEditInInt;
-							int percentageForEdit=100-remainingPercentageForEdit;
-							Debug.logInfo("this is the parcentage after the edit"+percentageForEdit,module);
-							int noOfQuestionsForEditCaluclation=(int) (percentageInInt*noOfQuestions);
-							int noOfQuestionsForEdit=noOfQuestionsForEditCaluclation/100;
-							Debug.logInfo("this is the remaining percentage for edit" + remainingPercentageForEdit,module);
-							Debug.logInfo("this is the no of questions for edit "+ noOfQuestionsForEdit,module);
-							if(percentageInInt<=percentageForEdit) {
-								Map<String, Object> editTopicMaster = dispatcher.runSync("editTopicMaster", UtilMisc.toMap("topicId",topicId,"topicName",topicName));
-								if(ServiceUtil.isSuccess(editTopicMaster)) {
-									Map<String, Object> editExamTopicMapping = dispatcher.runSync("editExamTopicMapping", UtilMisc.toMap("examId",examId,"topicId",topicId,"percentage",percentage,"topicPassPercentage",topicPassPercentage,"questionsPerExam",noOfQuestionsForEdit));
-									if(ServiceUtil.isSuccess(editExamTopicMapping)) {
-										request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping updated successfully");
+						request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping created successfully");
+						}
+						/*
+						 * edit topic and examTopicMapping
+						 */
+						else if(UtilValidate.isNotEmpty(topicId) && UtilValidate.isNotEmpty(examId)) {
+								try {
+									GenericValue topicInExamTopicMapping=EntityQuery.use(delegator).from("ExamTopicMappingMaster").where("examId",examId,"topicId",topicId).cache().queryOne();
+									BigDecimal topicPercentageForEdit=(BigDecimal)topicInExamTopicMapping.get("percentage");
+									int topicPercentageForEditInInt=topicPercentageForEdit.intValue();
+									Debug.logInfo("this is the percentage from entity" + topicPercentageForEditInInt,module);
+									Debug.logInfo("this is the value of the totalPercentage" + totalPercentage,module);
+									int remainingPercentageForEdit=totalPercentage-topicPercentageForEditInInt;
+									int percentageForEdit=100-remainingPercentageForEdit;
+									Debug.logInfo("this is the parcentage after the edit"+percentageForEdit,module);
+									int noOfQuestionsForEditCaluclation=(int) (percentageInInt*noOfQuestions);
+									int noOfQuestionsForEdit=noOfQuestionsForEditCaluclation/100;
+									Debug.logInfo("this is the remaining percentage for edit" + remainingPercentageForEdit,module);
+									Debug.logInfo("this is the no of questions for edit "+ noOfQuestionsForEdit,module);
+									if(percentageInInt<=percentageForEdit) {
+										Map<String, Object> editTopicMaster = dispatcher.runSync("editTopicMaster", UtilMisc.toMap("topicId",topicId,"topicName",topicName));
+										if(ServiceUtil.isSuccess(editTopicMaster)) {
+											Map<String, Object> editExamTopicMapping = dispatcher.runSync("editExamTopicMapping", UtilMisc.toMap("examId",examId,"topicId",topicId,"percentage",percentage,"topicPassPercentage",topicPassPercentage,"questionsPerExam",noOfQuestionsForEdit));
+											if(ServiceUtil.isSuccess(editExamTopicMapping)) {
+												request.setAttribute("EVENT_MESSAGE", "ExamTopicMapping updated successfully");
+											}
+										}else {
+											request.setAttribute("EVENT_MESSAGE", editTopicMaster);
+											return OnlineExam.ERROR;
+										}
+									}else {
+										String errMsg="you cannot edit the topic because remaining percentage :"+percentageForEdit;
+										request.setAttribute("EVENT_MESSAGE", errMsg);
+										return OnlineExam.ERROR;
 									}
-								}else {
-									request.setAttribute("EVENT_MESSAGE", editTopicMaster);
-									return OnlineExam.ERROR;
+								} catch (GenericEntityException e) {
+									e.printStackTrace();
+								} catch (GenericServiceException e) {
+									e.printStackTrace();
 								}
 							}else {
-								String errMsg="you cannot edit the topic because remaining percentage :"+percentageForEdit;
+								String errMsg="topicId is empty from frontEnd";
 								request.setAttribute("EVENT_MESSAGE", errMsg);
 								return OnlineExam.ERROR;
 							}
-						} catch (GenericEntityException e) {
-							e.printStackTrace();
-						} catch (GenericServiceException e) {
-							e.printStackTrace();
+						}else {
+							String errMsg="TopicName is already exists please give unique topicName";
+							request.setAttribute("EVENT_MESSAGE", errMsg);
+							return OnlineExam.ERROR;
 						}
-					}else {
-						String errMsg="topicId is empty from frontEnd";
-						request.setAttribute("EVENT_MESSAGE", errMsg);
-						return OnlineExam.ERROR;
+					} catch (GenericEntityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+				
+				}else {
+					String errMsg="TopicName is empty from front end";
+					request.setAttribute("EVENT_MESSAGE", errMsg);
+					return OnlineExam.ERROR;
+				}
+				
+			
 					
 				
 			}else {

@@ -1,5 +1,8 @@
 package com.vastpro.onlineexamapplication.event;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -9,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.calcite.runtime.HttpUtils;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilHttp;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -21,6 +25,7 @@ import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
+import com.ctc.wstx.shaded.msv.org_isorelax.dispatcher.Dispatcher;
 import com.vastpro.onlineexamapplication.constant.OnlineExam;
 
 public class UserEvent {
@@ -211,7 +216,6 @@ public class UserEvent {
 								}
 
 								try {
-
 									GenericValue UserExamMappingCheck = EntityQuery.use(delegator)
 											.from("UserExamMappingMaster")
 											.where("partyId", partyIdOfUser, "examId", examIdString).cache().queryOne();
@@ -221,8 +225,7 @@ public class UserEvent {
 												"createUserExamMapping",
 												UtilMisc.toMap("partyId", partyIdOfUser, "examId", examIdString,
 														"allowedAttempts", OnlineExam.ALLOWED_ATTEMPTS, "noOfAttempts",
-														OnlineExam.NO_OF_ATTEMPTS, "lastPerformanceDate",
-														OnlineExam.LAST_PERFORMANCE_DATE, "timeoutDays",
+														OnlineExam.NO_OF_ATTEMPTS, "timeoutDays",
 														OnlineExam.TIMEOUT_DAYS, "passwordChangesAuto",
 														OnlineExam.PASSWORD_CHANGES_AUTO, "canSplitExams",
 														OnlineExam.CAN_SPLIT_EXAMS, "canSeeDetailedResults",
@@ -262,16 +265,17 @@ public class UserEvent {
 			}
 			request.setAttribute("EVENT", "UserExamMapping success");
 			return OnlineExam.SUCCESS;
-		}
-		else {
+		} else {
 			String errMsg = "partyIdOfUser is empty ";
 			request.setAttribute("ERROR", errMsg);
 			return OnlineExam.ERROR;
 		}
-		
+
 	}
+
 	/**
 	 * getListOfUserExamMapping
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -353,4 +357,169 @@ public class UserEvent {
 
 	}
 
+	/**
+	 * getUserExamMapping
+	 * 
+	 * @param request
+	 * @param reponse
+	 * @return
+	 */
+	public static String getUserExamMapping(HttpServletRequest request, HttpServletResponse reponse) {
+		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
+		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
+		String partyIdOfUser = (String) userLogin.get(OnlineExam.PARTY_ID);
+		GenericValue userExamMapping = null;
+		Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
+		String examId = (String) combinedMap.get(OnlineExam.EXAM_ID);
+		if (UtilValidate.isNotEmpty(examId) && UtilValidate.isNotEmpty(partyIdOfUser)) {
+			try {
+				Debug.logInfo("==========Geting UserExamMappingDetail from UserExamMapping entity==========", module);
+				userExamMapping = EntityQuery.use(delegator).from("UserExamMappingMaster")
+						.where(OnlineExam.EXAM_ID, examId, OnlineExam.PARTY_ID, partyIdOfUser).cache().queryOne();
+				if (userExamMapping == null) {
+					String errMsg = "no UserExamMapping founded from entity UserExamMapping";
+					request.setAttribute("ERROR", errMsg);
+					return OnlineExam.ERROR;
+				}
+				request.setAttribute("getUserExamMapping", userExamMapping);
+				return OnlineExam.SUCCESS;
+			} catch (GenericEntityException e) {
+				String errMsg = "unable to get record from entity UserExamMapping" + e.toString();
+				request.setAttribute("ERROR", errMsg);
+				return OnlineExam.ERROR;
+			}
+		}
+		String errMsg = "either examId or partyId is null";
+		request.setAttribute("ERROR", errMsg);
+		return OnlineExam.ERROR;
+	}
+
+	/**
+	 * getOrCreateUserAttempt
+	 * 
+	 * @param request
+	 * @param reponse
+	 * @return
+	 */
+	public static String getOrCreateUserAttempt(HttpServletRequest request, HttpServletResponse reponse) {
+		Delegator delegator = (Delegator) request.getAttribute(OnlineExam.DELEGATOR);
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute(OnlineExam.DISPATCHER);
+
+		GenericValue userLogin = (GenericValue) request.getSession().getAttribute(OnlineExam.USERLOGIN);
+		String partyIdOfUser = (String) userLogin.get(OnlineExam.PARTY_ID);
+
+		GenericValue userExamMapping = null;
+		GenericValue userAttemptMaster = null;
+		GenericValue examDetail = null;
+		Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
+//		LocalDate currentDate = LocalDate.now();
+
+		String examId = (String) combinedMap.get(OnlineExam.EXAM_ID);
+		String performanceId = null;
+//		String attemptNumber = null;
+//		String score = null;
+//		String completedDate = null;
+//		String noOfQuestions = null;
+//		String totalCorrect = "0";
+//		String totalWrong = "0";
+//		String userPassed = "Y";
+		if (UtilValidate.isNotEmpty(examId) && UtilValidate.isNotEmpty(partyIdOfUser)) {
+			try {
+				examDetail = EntityQuery.use(delegator).from("ExamMaster").where(OnlineExam.EXAM_ID, examId).cache()
+						.queryOne();
+				if (UtilValidate.isEmpty(examDetail)) {
+					String errMsg = "given examId not found in ExamMaster";
+					request.setAttribute("Error", errMsg);
+					return OnlineExam.ERROR;
+				}
+				try {
+					Debug.logInfo("==========Geting UserAttemptMasterDetail from UserAttemptMaster entity==========",
+							module);
+					userExamMapping = EntityQuery.use(delegator).from("UserExamMappingMaster")
+							.where(OnlineExam.EXAM_ID, examId, OnlineExam.PARTY_ID, partyIdOfUser).cache().queryOne();
+					if (UtilValidate.isNotEmpty(userExamMapping)) {
+						Long allowedAttempts = (Long) userExamMapping.get("allowedAttempts");
+						Long noOfAttempts = (Long) userExamMapping.get("noOfAttempts");
+
+						if (noOfAttempts < allowedAttempts) {
+							noOfAttempts++;
+							Long attemptNumber = noOfAttempts;
+							userAttemptMaster = EntityQuery
+									.use(delegator).from("UserAttemptMaster").where(OnlineExam.EXAM_ID, examId,
+											OnlineExam.PARTY_ID, partyIdOfUser, "attemptNumber", attemptNumber)
+									.cache().queryOne();
+							if (UtilValidate.isNotEmpty(userAttemptMaster)) {
+								if (UtilValidate.isEmpty(userAttemptMaster.get("completedDate"))) {
+									String canSplitExams = (String) userExamMapping.get("canSplitExams");
+									if (canSplitExams.equals("Y")) {
+										request.setAttribute("Event", OnlineExam.SUCCESS);
+										return OnlineExam.SUCCESS;
+									}
+									else {
+										request.setAttribute("Event", "cannotSplitExam");
+										return OnlineExam.SUCCESS;
+									}
+								}
+							} else {
+								try {
+									Map<String, Object> createUserAttemptDetail = dispatcher
+											.runSync("createUserAttempt",
+													UtilMisc.toMap("examId", examId, "partyId", partyIdOfUser,
+															"attemptNumber", attemptNumber, OnlineExam.USERLOGIN,
+															userLogin));
+									if (ServiceUtil.isSuccess(createUserAttemptDetail)) {
+
+										performanceId = Integer
+												.toString((int) createUserAttemptDetail.get("performanceId"));
+
+										List<GenericValue> ExamTopicMappingList = EntityQuery.use(delegator)
+												.from("ExamTopicMappingMaster").where("examId", examId).cache()
+												.queryList();
+										for (GenericValue ExamTopicMapping : ExamTopicMappingList) {
+											String topicId = (String) ExamTopicMapping.get("topicId");
+											Long questionsPerExam = (Long) ExamTopicMapping.get("questionsPerExam");
+											BigDecimal topicPassPercentage = (BigDecimal) ExamTopicMapping
+													.get("topicPassPercentage");
+											// calling service user-attempt-topic-master
+											dispatcher.runSync("user-attempt-topic-master",
+													UtilMisc.toMap("performanceId", performanceId, "topicId", topicId,
+															"topicPassPercentage", topicPassPercentage,
+															"totalQuestionsInThisTopic", questionsPerExam));
+										}
+									} else {
+										String errMsg = "examId from the ExamTopicMappingMaster is empty";
+										request.setAttribute("EVENT_MESSAGE", errMsg);
+										return OnlineExam.ERROR;
+									}
+
+								} catch (GenericServiceException e) {
+									String errMsg = "unable to call service createUserAttempt" + e.toString();
+									request.setAttribute("ERROR", errMsg);
+									return OnlineExam.ERROR;
+								}
+								request.setAttribute("Event", OnlineExam.SUCCESS);
+								return OnlineExam.SUCCESS;
+							}
+						} else {
+							request.setAttribute("Event", "attemptLimitReachecd");
+							return OnlineExam.SUCCESS;
+						}
+					} else {
+						String errMsg = "unable to find userExamMapping from userExamMappingMaster";
+						request.setAttribute("ERROR", errMsg);
+						return OnlineExam.ERROR;
+					}
+				} catch (GenericEntityException e) {
+					String errMsg = "unable to get record from entity UserAttemptMaster" + e.toString();
+					request.setAttribute("ERROR", errMsg);
+					return OnlineExam.ERROR;
+				}
+			} catch (GenericEntityException e1) {
+				e1.printStackTrace();
+			}
+		}
+		String errMsg = "either examId or partyId is null";
+		request.setAttribute("ERROR", errMsg);
+		return OnlineExam.ERROR;
+	}
 }

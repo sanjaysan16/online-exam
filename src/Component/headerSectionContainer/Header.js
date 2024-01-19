@@ -58,8 +58,8 @@ const Header = () => {
 
       <LoginModal />
 
-      <div className="sidebar-nav nav-color ">
-        <nav className="navbar navbar-dark nav-color ">
+      <div className="sidebar-nav bg-secondary ">
+        <nav className="navbar navbar-dark bg-secondary ">
           <div className="mx-2">
             <button
               className="navbar-toggler "
@@ -81,7 +81,7 @@ const Header = () => {
             {/* admin offcanvass start */}
 
             <div
-              className="nav-color offcanvas offcanvas-start "
+              className="bg-secondary offcanvas offcanvas-start "
               id="offcanvasNavbar"
             >
               <div className="offcanvass-body">

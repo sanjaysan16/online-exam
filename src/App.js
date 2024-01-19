@@ -26,6 +26,8 @@ import UserAttempt from "./Component/userSectionContainer/UserAttempt";
 import ExamInstruction from "./Component/userSectionContainer/ExamInstruction";
 import TakingExam from "./Component/userSectionContainer/TakingExam";
 import ExamDashBoardForUser from "./Component/userSectionContainer/ExamDashBoardForUser";
+import ResultPageForAdmin from "./Component/adminSectionContainer/ResultPageForAdmin";
+import ResultPageForAdminAndStudent from "./Component/adminSectionContainer/ResultPageForAdminAndStudent";
 
 
 
@@ -47,6 +49,9 @@ function App() {
           <Route path='/add-question' element={<AddQuestion />} />
           <Route path='/view-question' element={<ViewQuestion />} />
           <Route path='/update-question' element={<UpdateQuestion />} />
+          <Route path='/result-page-for-admin' element={<ResultPageForAdmin />} />
+          <Route path='/result-page-for-admin-and-student' element={<ResultPageForAdminAndStudent />} />
+
 
           <Route path='/view-exam' element={<ExamDashBord />} />
           <Route path='/view-result' element={<ReportCard />} />

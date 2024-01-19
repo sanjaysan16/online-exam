@@ -34,8 +34,18 @@ public class UserExamList {
 		Debug.logInfo("examId from front end is", examId,module);
 		
 		GenericValue userLogin =(GenericValue) request.getSession().getAttribute("userLogin");
-		String userName = (String)userLogin.get("userLoginId");
-		request.setAttribute("username", userName);
+		if(UtilValidate.isNotEmpty(userLogin)) {
+			String userName = (String)userLogin.get("userLoginId");
+			String partyId= (String)userLogin.get("partyId");
+			
+			request.setAttribute("username", userName);
+			request.setAttribute("partyId", partyId);
+		}else {
+			String errMsg="user details or empty in the userLogin";
+			request.setAttribute("EVENT_MESSAGE", errMsg);
+			return OnlineExam.ERROR;
+		}
+		
 		
 		if(UtilValidate.isNotEmpty(examId)) {
 			
@@ -85,48 +95,6 @@ public class UserExamList {
 		
 		return OnlineExam.SUCCESS;
 		
-	}
-	
-	public static String topicQuestionList(HttpServletRequest request,HttpServletResponse response) {
-		Delegator delegator = (Delegator)request.getAttribute("delegator");
-		
-		String examId=request.getParameter("examId");
-		String topicName=request.getParameter("topicName");
-		Debug.logInfo("examId", examId,module);
-		Debug.logInfo("topicName", topicName,module);
-		if(UtilValidate.isNotEmpty(topicName)) {
-			try {
-				GenericValue topicIdFromTopicMaster=EntityQuery.use(delegator).from("TopicMaster").where("topicName",topicName).cache().queryOne();
-				if(UtilValidate.isNotEmpty(topicIdFromTopicMaster)) {
-					String topicId=(String)topicIdFromTopicMaster.get("topicId");
-					Debug.logInfo("topicId", topicId,module);
-					if(UtilValidate.isNotEmpty(topicId)) {
-						List<GenericValue> questionsFromQuestionMaster=EntityQuery.use(delegator).from("QuestionMaster").where("topicId",topicId).cache().queryList();
-						request.setAttribute("questionsFromQuestionMaster", questionsFromQuestionMaster);
-						System.out.println("generic value of the questions"+questionsFromQuestionMaster);
-					}
-					else {
-						String errMsg="topic id from the topicMaster entity is empty";
-						request.setAttribute("EVENT_MESSAGE", errMsg);
-						return OnlineExam.ERROR;
-					}
-					
-				}else {
-					String errMsg="topic is not there in the topicMaster entity";
-					request.setAttribute("EVENT_MESSAGE", errMsg);
-					return OnlineExam.ERROR;
-				}
-				
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-			}
-		}else {
-			String errMsg="topic name from frontend is empty";
-			request.setAttribute("EVENT_MESSAGE", errMsg);
-			return OnlineExam.ERROR;
-		}
-		
-		return OnlineExam.SUCCESS;
 	}
 
 }

@@ -524,7 +524,8 @@ function AddQuestion() {
                           <input
                             type="text"
                             className="form-control"
-                            defaultValue={"True"}
+                            name="optionA"
+                            defaultValue="true"
                           ></input>
                         </div>
                         <div className="form-check">
@@ -532,7 +533,8 @@ function AddQuestion() {
                           <input
                             type="text"
                             className="form-control"
-                            defaultValue={"false"}
+                            name="optionB"
+                            defaultValue="false"
                           ></input>
                         </div>
                         <div className="form-group">
